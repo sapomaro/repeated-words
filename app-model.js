@@ -11,10 +11,10 @@ window.LangToolsApp.repeatedWordsModule = (function() {
 		'пере-, по-, под-, подо-, поза-, после-, пра-, пред-, преди-, предо-, про-,'+
 		'противо-, разо-, с-, со-, сверх-, среди-, су-, тре-, у-, без-, бес-, вз-,'+
 		'вс-, воз-, вос-, из-, ис-, низ-, нис-, обез-, обес-, раз-, рас-, роз-, рос-,'+
-		'через-, черес-, чрез-, чрес-, пре-, при-, зло-, взаимо-, псевдо-, анти-, гео'+
-		'везде-';
+		'через-, черес-, чрез-, чрес-, пре-, при-, зло-, взаимо-, псевдо-, анти-, гео-,'+
+		'везде-, много-, одно-, дву-, двух';
 	var suffixes = '-айш-, -е-, -ее-, -ей-, -ейш-, -же-, -ше-, -л-, -ел-, -ти, -ть, -и, -ащ-,'+
-		'-ящ-, -вш-, -ш-, -ущ-, -ющ-, -ем-, -им-, -ом-, -нн-, -енн-, -онн-, -т-, -а-, -я-,'+
+		'-ящ-, -вш-, -ш-, -ущ-, -ющ-, -ем-, -им-, -ом-, -нн-, -енн-, -онн-, -т-, -ить, -а-, -я-,'+
 		'-учи-, -ючи-, -вши-, -ши-, -ес-, -ен-, -ер-, -й-, -ейш-, -айш-, -к-, -ик-, '+
 		'-ек-, -ок-, -чик, -ёк-, -еньк-, -оньк-, -ечк-, -ичк-, -ич-, -очк-, -ашк-, -ашн-, -ишк-, -ашек-'+
 		'-ушк-, -юшк-, -ышк-, -ец-, -иц-, -енк-, -инк-, -онк-, -ин-, -ищ-, -ушек, -ышек,'+
@@ -37,7 +37,9 @@ window.LangToolsApp.repeatedWordsModule = (function() {
 		'случ, вопрос, стран, сил, систем, вод, образ, истор, власт, союз, совет,'+
 		'войн, стол, столиц, област, стат, закон, развит, средств, процесс,'+
 		'услов, начал, свет, пора, связ, улиц, вечер, век, ситуац, планет, полит,'+
-		'доступ, преступ, вред, участ, уваж, уступ, газон, мыш, тиш, пут'; 
+		'доступ, преступ, вред, участ, уваж, уступ, газон, мыш, тиш, пут, соверш,'+
+		'вер, прав, правл, правил, доход, сторон, втор'; 
+	var immutableWords = 'пока, там, так, как, что, вне';
 	
 	var exceptions = 'из, за, на, не, по, бы, до, для'; // повторы, которые могут не учитываться
 	
@@ -60,6 +62,7 @@ window.LangToolsApp.repeatedWordsModule = (function() {
 		var wordRootSuffixed = word; // корень с суффиксом (для расширенного сопоставления)
 		var wordRootMatched = false; // наличие проблемного корня
 		
+		if (immutableWords.indexOf(wordRoot) !== -1) { return [wordRoot, wordRootPrefixed, wordRootSuffixed]; }
 		if (roots.indexOf(wordRoot) !== -1) { return [wordRoot, wordRootPrefixed, wordRootSuffixed]; }
 		
 		for (var r in roots) { // проверка на наличие проблемного корня
@@ -100,7 +103,9 @@ window.LangToolsApp.repeatedWordsModule = (function() {
 					break;
 				}
 			}
-			if (roots.indexOf(wordRoot) !== -1) { break; }
+			if (roots.indexOf(wordRoot) !== -1) { 
+				break; 
+			}
 		}
 	
 		
@@ -133,12 +138,13 @@ window.LangToolsApp.repeatedWordsModule = (function() {
 			if (exceptions.indexOf(word) !== -1) { continue; }
 
 			wordForms = [word, wordRoot, wordRootSuffixed, wordRootPrefixed];
-				
+
 			for (var f in wordForms) {
 				if (f > 0 && word === wordForms[f]) { continue; }
 				
 				if ('undefined' === typeof wordsMap[wordForms[f]]) {
 					wordsMap[wordForms[f]] = [i];
+	
 				} else if (wordsMap[wordForms[f]].indexOf(i) === -1) {
 					wordsMap[wordForms[f]].push(i);
 				}
