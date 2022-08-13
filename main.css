@@ -38,11 +38,14 @@ html, body {
 	margin: 0 auto;
 }
 
+#load-indicator {
+	border:2px solid transparent;
+}
 
 #input-block {
 	width: 100%; 
 	margin: 1ex 0;
-	border: 2px solid #ccc;
+	border: 2px solid #333;
 	background: #fff;
 }
 .input-area {
@@ -69,15 +72,42 @@ html, body {
 	z-index: 2; 
 	color: #333; 
 }
-#input-check, #input-check2 {
-	font: 100%/1 monospace; 
-	margin: 1ex 0;
-}
 h1 {
 	margin: 2ex 0;
 	color: #333;
 }
+.input-button, .input-field {
+	font: 100%/1 monospace; 
+	box-sizing: border-box;
+	height: 5ex;
+	margin: 1ex 0;
+	padding: 10px;
+	border: 2px solid #333;
+
+	outline: none;
+}
+.input-button {
+	background: #333;
+	color: #fff;
+}
+.input-field {
+	width: 3em;
+}
+.input-button:active {
+	transform: scale(0.98);
+}
+.input-button:disabled {
+	background: #999;
+	border-color: #999;
+	color: #fff;
+	transform: scale(1);
+}
+.input-field:disabled {
+	border-color: #999;
+}
+
+
 .input-highlight {
-	color: #fc0; 
+	color: red; 
 	text-decoration: underline;
 }

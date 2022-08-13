@@ -5,17 +5,21 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=0.5">
 	<link rel="stylesheet" href="main.css">
-	<title>🔁 Поиск повторов слов</title>
+	<title>🔁 Поиск повторов слов v0.2</title>
 </head>
 <body lang="en">
+	<div id="load-indicator"></div>
 	<div id="container">
 		<h1>Поиск повторов слов</h1>
-		<button id="input-check">Найти повторы</button>
+		<p>
+			<button id="input-check" class="input-button">Найти повторы на расстоянии: </button>&ensp;
+			<input id="input-distance" class="input-field" value="50">
+		</p>
 		<div id="input-block">
 			<div id="input-view" class="input-area"></div>
 			<textarea id="input-edit" class="input-area" spellcheck="false"></textarea>
 		</div>
-		<button id="input-check2">Найти повторы</button>
+		<!--<button id="input-check2" class="input-button">Найти повторы</button>-->
 		<br><br><br>
 	</div>
 <script src='app-model.js'></script>
