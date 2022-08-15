@@ -8,18 +8,21 @@
 	<title>🔁 Поиск повторов слов v0.2</title>
 </head>
 <body lang="en">
-	<div id="load-indicator"></div>
 	<div id="container">
 		<h1>Поиск повторов слов</h1>
-		<p>
-			<button id="input-check" class="input-button">Найти повторы на расстоянии: </button>&ensp;
-			<input id="input-distance" class="input-field" value="50">
-		</p>
-		<div id="input-block">
-			<div id="input-view" class="input-area"></div>
-			<textarea id="input-edit" class="input-area" spellcheck="false"></textarea>
-		</div>
-		<!--<button id="input-check2" class="input-button">Найти повторы</button>-->
+		<form name="repetitions">
+			<p>
+				<button name="submit" class="form-button">
+					<b id="form-indicator"></b> Найти повторы на расстоянии: 
+				</button>&ensp;
+				<input name="distance" class="form-field" value="50">&ensp;слов
+			</p>
+			<div class="form-fieldset">
+				<output name="view" class="form-area form-view"></output>
+				<textarea name="edit" class="form-area form-edit" spellcheck="false"></textarea>
+			</div>
+			<button name="up" class="form-button"><b>⭱</b> Вернуться наверх</button>
+		</form>
 		<br><br><br>
 	</div>
 <script src='app-model.js'></script>

@@ -45,12 +45,12 @@ window.LangToolsApp.RusWordFormsModule = (function() {
 		'-ому, -ему, -ой, -ей, -ым, -им, -ую, -юю, -ыми, -ими, -ом, -ем' // прил. дат./вин./твор.п.
 	); 
 	var unbreakableRoots = parseMorphemes( // проблемные корни, которые могут быть неверно разбиты
-		'вид, вред, вер, вечер, власт, век, вод, вопрос, войн, втор, '+
-		'газон, дел, доход, доступ, закон, запад, истор, '+
+		'вид, вред, вер, вечер, власт, век, вод, вопрос, войн, втор, возраж, '+
+		'газон, дел, доход, доступ, долж, закон, запад, истор, '+
 		'крат, крыл, мыш, начал, начин, недел, '+
-		'област, образ, остров, '+
+		'област, образ, остров, отраж, обреч, '+
 		'пут, пора, получ, полн, прав, правл, правил, проект, прост, постав, '+
-		'процесс, преступ, планет, полит, послед, продолж, долж, '+
+		'процесс, преступ, планет, полит, послед, продолж, предел, '+
 		'развит, '+
 		'сид, свиде, след, слов, случ, стран, сил, систем, средств, стол, столиц, сведен, '+ 
 		'сторон, связ, ситуац, союз, совет, стат, суверен, содерж, соверш, свет, '+
@@ -58,9 +58,12 @@ window.LangToolsApp.RusWordFormsModule = (function() {
 		'услов, участ, уваж, уступ, улиц, указ, формул'
 	); 
 	
-	// спорные случаи: последний - последствия
+	/*	спорные случаи: 
+			последний - последствия
+			снег - снежный
+	*/
 	
-	var immutableRoots = 'пока, там, так, как, что, раз, вне, при';
+	var immutableRoots = 'никто, пока, там, так, как, кто, что, раз, вне, при';
 	
 	var wordFormsHandler = function(word) {
 		var wordRoot = word; // корень без аффиксов
@@ -206,25 +209,62 @@ window.LangToolsApp.RepeatedWordsModule = (function() {
 	wordMatrix.getRepetitions = function(searchDistance) {
 		if (!searchDistance) { searchDistance = 50; }
 		
-		var repeatedWordsPos = [];
+		//var countedWordsPos = {};
+		
+		var repeatedPairs = [];
+		var pairs = [];
+		
+		
 		for (var word in this.matrix) {
 			if (this.matrix.hasOwnProperty(word) === false) { continue; }
 			if (this.matrix[word].length < 2) { continue; } // пролистываем словоформы, у которых нет совпадений
 			
 			var wordPos = this.matrix[word].sort(function(a, b) { return a - b; });
-
+			
+//alert(wordPos);
+			
 			for (var i = 1; i < wordPos.length; ++i) {
-				var wordsDistance = wordPos[i] - wordPos[i - 1];
+				
+				//if (countedWordsPos['_' + wordPos[i]]) { continue; }
+				
 				// поиск совпадений на заданном расстоянии
+				var wordsDistance = wordPos[i] - wordPos[i - 1];
 				if (wordsDistance > 0 && wordsDistance < searchDistance) { 
-					if (repeatedWordsPos.indexOf(wordPos[i - 1]) === -1) {
-						repeatedWordsPos.push(wordPos[i - 1]);
+					if (pairs.indexOf(wordPos[i - 1]) === -1) {
+						pairs.push(wordPos[i - 1]);
 					}
-					repeatedWordsPos.push(wordPos[i]);
+					pairs.push(wordPos[i]);
+					//countedWordsPos['_' + wordPos[i]] = true;
+					
+				}
+				else if (pairs.length > 1) {
+					repeatedPairs.push(pairs); 
+					pairs = [];
+				}
+			}
+			if (pairs.length > 1) {
+				repeatedPairs.push(pairs); 
+				pairs = [];
+			}
+		}
+		repeatedPairs = repeatedPairs.sort(function(a, b) { return a[0] - b[0]; });
+		
+		var i = repeatedPairs.length;
+		while (i-- > 0) {
+			if (repeatedPairs[i - 1] && repeatedPairs[i][0] === repeatedPairs[i - 1][0]) {
+				
+				if (repeatedPairs[i].length <= repeatedPairs[i - 1].length) {
+					repeatedPairs.splice(i, 1);
+				}
+				else {
+					repeatedPairs.splice(i - 1, 1);
+					i--;
 				}
 			}
 		}
-		return repeatedWordsPos;
+		
+		
+		return repeatedPairs;
 		
 	};
 	

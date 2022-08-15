@@ -1,5 +1,4 @@
 
-
 window.onload = function(event) {
 	"use strict";
 	
@@ -7,84 +6,113 @@ window.onload = function(event) {
 	
 	var wordFormsHandler = LangToolsApp.RusWordFormsModule.wordFormsHandler;
 	
-	var loadIndicator = document.getElementById('load-indicator');
-	var inputFieldset = document.getElementById('input-block');
-	var inputTextarea = document.getElementById('input-edit');
-	var inputViewarea = document.getElementById('input-view');
-	var inputCheckButton = document.getElementById('input-check');
-	var inputDistanceField = document.getElementById('input-distance');
-	//var inputCheckButton2 = document.getElementById('input-check2');
+	var ui = document.forms.repetitions;
+	ui.indicator = document.querySelector('#form-indicator');
 	
-	inputTextarea.inputAutoResize = function() {
+	
+	
+	ui.viewUpdate = function() {
+		if (ui.edit.value === '') {
+			ui.view.innerHTML = 'Вставьте сюда текст...';
+		}
+		else {
+			ui.view.innerHTML = ui.edit.value;
+		}
+		ui.edit.autoResize();
+		ui.style.height = ui.edit.scrollHeight;
+	};
+	ui.toggleButtons = function(state) {
+		if (state === 0) {
+			ui.indicator.innerHTML = '⌛';
+			ui.submit.disabled = true;
+			ui.distance.disabled = true;
+		}
+		else {
+			ui.indicator.innerHTML = '⭾';
+			ui.submit.disabled = false;
+			ui.distance.disabled = false;
+		}
+	};
+	
+	ui.edit.autoResize = function() {
 		this.style.overflowY = 'hidden';
 		this.style.marginTop = this.scrollHeight + 'px'; 
 		this.style.minHeight = 0;
 		this.style.minHeight = this.scrollHeight + 'px'; 
 		this.style.marginTop = 0;
 	};
-	
-	var inputUpdateHandler = function() {
-		inputViewarea.innerHTML = inputTextarea.value;
-		inputFieldset.style.height = inputTextarea.scrollHeight;
-		inputTextarea.inputAutoResize();
+	ui.edit.alignLines = function() {
+		this.value = this.value.replace(/\n+/g, "\n\n");
 	};
+
 	
-	var inputLinesHandler = function() {
-		inputTextarea.value = inputTextarea.value.replace(/\n+/g, "\n\n");
-	};
+	ui.edit.addEventListener('input', ui.viewUpdate);
+	ui.edit.addEventListener('keyup', ui.viewUpdate);
+	ui.viewUpdate();
+	ui.toggleButtons(1);
 	
-	
-	inputUpdateHandler();
-	inputTextarea.addEventListener('input', inputUpdateHandler);
-	inputTextarea.addEventListener('keyup', inputUpdateHandler);
-	
-	inputTextarea.addEventListener('paste', function() {
+
+	ui.edit.addEventListener('paste', function() {
 		setTimeout(function() {
-			inputLinesHandler();
-			inputUpdateHandler();
+			ui.edit.alignLines();
+			ui.viewUpdate();
 		}, 1);
 	});
 	
-	inputCheckButton.onclick = function() {
+	var resizeTimer = null;
+	window.addEventListener('resize', function(event) {
+		if (resizeTimer) { return null; }
+		resizeTimer = setTimeout(function() {
+			ui.viewUpdate();
+			resizeTimer = null;
+		}, 100);
+	});
+	
+	
+	ui.submit.addEventListener('click', function(event) {
+		event.preventDefault();
 		
-		/*
-		var progress = 1;
-		loadIndicator.style.width = '0';
-		var loadInterval = setInterval(function () {
-			loadIndicator.style.width = (++progress) + '%';
-		}, 10);
-		*/
+		ui.toggleButtons(0);
 		
-		inputCheckButton.disabled = true;
-		inputDistanceField.disabled = true;
-		
-		inputLinesHandler();
+		ui.edit.alignLines();
 		
 		setTimeout(function() {
-			var text = inputTextarea.value;
-			var distance = parseInt(inputDistanceField.value);
-			wordMatrix.build(text, wordFormsHandler);
-			
-			var repetitions = wordMatrix.getRepetitions(distance);
-			
-			text = text.replace(/([А-ЯЁа-яёA-Za-z]+)/g, "<span>$1</span>");
-			inputViewarea.innerHTML = text;
+			var text = ui.edit.value;
+			if (text !== '') { 
+				var distance = parseInt(ui.distance.value);
+				wordMatrix.build(text, wordFormsHandler);
+				
+				var repetitions = wordMatrix.getRepetitions(distance);
+				
+				ui.view.innerHTML = text.replace(/([А-ЯЁа-яёA-Za-z]+)/g, "<span>$1</span>");
 
-			var nodeList = document.querySelectorAll('#input-view > span');
-			for(var i in repetitions) {
-				if (nodeList[repetitions[i]]) {
-					nodeList[repetitions[i]].className = "input-highlight";
+				var nodeList = ui.view.querySelectorAll('span');
+				
+				//alert(JSON.stringify(repetitions)); 
+				
+				var highlightStyle = 0;
+				for(var r = 0; r < repetitions.length; ++r) {
+					++highlightStyle;
+					for(var p = 0; p < repetitions[r].length; ++p) {
+						if (nodeList.item(repetitions[r][p])) {
+							nodeList.item(repetitions[r][p]).className = "form-view-highlight form-view-highlight" + (highlightStyle % 7);
+						}
+					}
 				}
 			}
-			inputCheckButton.disabled = false;
-			inputDistanceField.disabled = false;
 			
-			//clearInterval(loadInterval);
+			ui.toggleButtons(1);
+
 			
 		}, 1);
 		
-	};
+	});
 	
-	//inputCheckButton2.onclick = inputCheckButton.onclick;
+	ui.up.addEventListener('click', function(event) {
+		event.preventDefault();
+		window.scrollTo(0, 0);
+	});
+	
+
 	
 };

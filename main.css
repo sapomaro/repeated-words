@@ -41,14 +41,18 @@ html, body {
 #load-indicator {
 	border:2px solid transparent;
 }
-
-#input-block {
+h1 {
+	margin: 2ex 0;
+	line-height: 1;
+	color: #333;
+}
+.form-fieldset {
 	width: 100%; 
 	margin: 1ex 0;
 	border: 2px solid #333;
 	background: #fff;
 }
-.input-area {
+.form-area {
 	font: 100%/1 monospace; 
 	width: 90%; 
 	height: 30ex; 
@@ -62,21 +66,17 @@ html, body {
 	overflow-wrap: break-word;
 	overflow: none; outline: none;
 }
-#input-view { 
+.form-view { 
 	position: absolute; 
 	z-index: 1; 
-	color: #333; 
+	color: #aaa; 
 }
-#input-edit { 
+.form-edit { 
 	position: relative; 
 	z-index: 2; 
 	color: #333; 
 }
-h1 {
-	margin: 2ex 0;
-	color: #333;
-}
-.input-button, .input-field {
+.form-button, .form-field {
 	font: 100%/1 monospace; 
 	box-sizing: border-box;
 	height: 5ex;
@@ -86,28 +86,32 @@ h1 {
 
 	outline: none;
 }
-.input-button {
+.form-button {
 	background: #333;
 	color: #fff;
 }
-.input-field {
+.form-field {
 	width: 3em;
 }
-.input-button:active {
+.form-button:active {
 	transform: scale(0.98);
 }
-.input-button:disabled {
+.form-button:disabled {
 	background: #999;
 	border-color: #999;
 	color: #fff;
 	transform: scale(1);
+	cursor: not-allowed;
 }
-.input-field:disabled {
+.form-field:disabled {
 	border-color: #999;
+	cursor: not-allowed;
 }
-
-
-.input-highlight {
-	color: red; 
-	text-decoration: underline;
-}
+.form-view-highlight { text-decoration: underline; }
+.form-view-highlight0 { color: red; }
+.form-view-highlight1 { color: green; }
+.form-view-highlight2 { color: blue; }
+.form-view-highlight3 { color: fuchsia; }
+.form-view-highlight4 { color: lime; }
+.form-view-highlight5 { color: aqua; }
+.form-view-highlight6 { color: yellow; }
