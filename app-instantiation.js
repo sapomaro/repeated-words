@@ -1,5 +1,4 @@
-
-window.onload = function(event) {
+window.addEventListener('load', function(event) {
 	"use strict";
 	
 	var wordMatrix = LangToolsApp.RepeatedWordsModule.wordMatrix;
@@ -92,6 +91,7 @@ window.onload = function(event) {
 				
 				var highlightStyle = 0;
 				for(var r = 0; r < repetitions.length; ++r) {
+					if (repetitions[r].length === 0) { continue; }
 					++highlightStyle;
 					for(var p = 0; p < repetitions[r].length; ++p) {
 						if (nodeList.item(repetitions[r][p])) {
@@ -115,4 +115,4 @@ window.onload = function(event) {
 	
 
 	
-};
+});

@@ -46,15 +46,15 @@ window.LangToolsApp.RusWordFormsModule = (function() {
 	); 
 	var unbreakableRoots = parseMorphemes( // проблемные корни, которые могут быть неверно разбиты
 		'вид, вред, вер, вечер, власт, век, вод, вопрос, войн, втор, возраж, '+
-		'газон, дел, доход, доступ, долж, закон, запад, истор, '+
+		'газон, дел, доход, доступ, долж, закон, заслон, запад, истор, '+
 		'крат, крыл, мыш, начал, начин, недел, '+
 		'област, образ, остров, отраж, обреч, '+
 		'пут, пора, получ, полн, прав, правл, правил, проект, прост, постав, '+
 		'процесс, преступ, планет, полит, послед, продолж, предел, '+
 		'развит, '+
 		'сид, свиде, след, слов, случ, стран, сил, систем, средств, стол, столиц, сведен, '+ 
-		'сторон, связ, ситуац, союз, совет, стат, суверен, содерж, соверш, свет, '+
-		'тиш, '+
+		'сторон, связ, ситуац, союз, совет, стат, суверен, содерж, соверш, свет, слон,'+
+		'тиш, тест, '+
 		'услов, участ, уваж, уступ, улиц, указ, формул'
 	); 
 	
@@ -64,6 +64,7 @@ window.LangToolsApp.RusWordFormsModule = (function() {
 	*/
 	
 	var immutableRoots = 'никто, пока, там, так, как, кто, что, раз, вне, при';
+	
 	
 	var wordFormsHandler = function(word) {
 		var wordRoot = word; // корень без аффиксов
@@ -122,11 +123,13 @@ window.LangToolsApp.RusWordFormsModule = (function() {
 	};
 	
 	
+	
+	
 	return { wordFormsHandler: wordFormsHandler };
 })();
 
 
-window.LangToolsApp.RepeatedWordsModule = (function() { 
+window.LangToolsApp.RepeatedWordsModule = (function() {
 	"use strict";
 	
 	var exceptions = 'из, за, на, не, ни, по, бы, до, для, под'; // повторы, которые могут не учитываться
@@ -143,19 +146,17 @@ window.LangToolsApp.RepeatedWordsModule = (function() {
 		var wordsArray = this.parseInputText(text);
 		var word = '';
 		var wordForms = [];
-		
 		this.matrix = {};
 		
-		for (var pos = 0; pos < wordsArray.length; ++pos) { 
+		for (var pos = 0; pos < wordsArray.length; ++pos) {
 			pos = parseInt(pos);
 			word = wordsArray[pos].toLowerCase();
 			
 			if (!word) { continue; }
 			if (word.length < 2) { continue; }
-			if (exceptions.indexOf(word) !== -1) { continue; }			
+			if (exceptions.indexOf(word) !== -1) { continue; }
 			
 			wordForms = wordFormsHandler(word); // word, wordRoot, wordRootSuffixed, wordRootPrefixed
-			
 			
 			for (var f = 0; f < wordForms.length; ++f) { 
 				if (f > 0 && word === wordForms[f]) { continue; }
@@ -171,11 +172,10 @@ window.LangToolsApp.RepeatedWordsModule = (function() {
 
 		}
 		
-		this.interlink();
+		this.compareEach();
 	};
 	
-	
-	wordMatrix.interlink = function() {
+	wordMatrix.compareEach = function() {
 		for (var word in this.matrix) {
 			if (word.length < 6) { continue; }
 			if (this.matrix.hasOwnProperty(word) === false) { continue; }
@@ -184,22 +184,23 @@ window.LangToolsApp.RepeatedWordsModule = (function() {
 				if (this.matrix.hasOwnProperty(word2) === false) { continue; }
 				if (this.matrix[word] === this.matrix[word2]) { continue; }
 				
-				if (word.length === word2.length) { 
-					if (word.slice(0, word.length - 1) === word2.slice(0, word2.length - 1)) {
-						// поиск совпадений слов, у которых отличается только одна буква в конце
-						var wordsMapChunk = this.matrix[word].concat(this.matrix[word2]);
-						
-						for (var pos = 0; pos < wordsMapChunk.length; ++pos) { 
-							wordsMapChunk[pos] = parseInt(wordsMapChunk[pos]);
-						
-							if (this.matrix[word].indexOf(wordsMapChunk[pos]) === -1) {
-								this.matrix[word].push(wordsMapChunk[pos]);
-							}
-							if (this.matrix[word2].indexOf(wordsMapChunk[pos]) === -1) {
-								this.matrix[word2].push(wordsMapChunk[pos]);
-							}
-						}
-					}
+				this.compareLastLetter(word, word2);
+				
+			}
+		}
+	};
+	wordMatrix.compareLastLetter = function(word, word2) {
+		if (word.length === word2.length 
+			&& word.slice(0, word.length - 1) === word2.slice(0, word2.length - 1)) {
+			// поиск совпадений слов, у которых отличается только одна буква в конце
+			var wordsMapChunk = this.matrix[word].concat(this.matrix[word2]);
+			for (var pos = 0; pos < wordsMapChunk.length; ++pos) {
+				wordsMapChunk[pos] = parseInt(wordsMapChunk[pos]);
+				if (this.matrix[word].indexOf(wordsMapChunk[pos]) === -1) {
+					this.matrix[word].push(wordsMapChunk[pos]);
+				}
+				if (this.matrix[word2].indexOf(wordsMapChunk[pos]) === -1) {
+					this.matrix[word2].push(wordsMapChunk[pos]);
 				}
 			}
 		}
@@ -207,65 +208,59 @@ window.LangToolsApp.RepeatedWordsModule = (function() {
 	
 	
 	wordMatrix.getRepetitions = function(searchDistance) {
+		// поиск совпадений на заданном расстоянии
 		if (!searchDistance) { searchDistance = 50; }
-		
-		//var countedWordsPos = {};
-		
-		var repeatedPairs = [];
+		var repetitions = [];
 		var pairs = [];
-		
 		
 		for (var word in this.matrix) {
 			if (this.matrix.hasOwnProperty(word) === false) { continue; }
 			if (this.matrix[word].length < 2) { continue; } // пролистываем словоформы, у которых нет совпадений
-			
 			var wordPos = this.matrix[word].sort(function(a, b) { return a - b; });
-			
-//alert(wordPos);
-			
 			for (var i = 1; i < wordPos.length; ++i) {
-				
-				//if (countedWordsPos['_' + wordPos[i]]) { continue; }
-				
-				// поиск совпадений на заданном расстоянии
 				var wordsDistance = wordPos[i] - wordPos[i - 1];
-				if (wordsDistance > 0 && wordsDistance < searchDistance) { 
+				if (wordsDistance > 0 && wordsDistance < searchDistance) {
 					if (pairs.indexOf(wordPos[i - 1]) === -1) {
 						pairs.push(wordPos[i - 1]);
 					}
 					pairs.push(wordPos[i]);
-					//countedWordsPos['_' + wordPos[i]] = true;
-					
 				}
 				else if (pairs.length > 1) {
-					repeatedPairs.push(pairs); 
+					repetitions.push(pairs); 
 					pairs = [];
 				}
 			}
 			if (pairs.length > 1) {
-				repeatedPairs.push(pairs); 
+				repetitions.push(pairs); 
 				pairs = [];
 			}
 		}
-		repeatedPairs = repeatedPairs.sort(function(a, b) { return a[0] - b[0]; });
 		
-		var i = repeatedPairs.length;
-		while (i-- > 0) {
-			if (repeatedPairs[i - 1] && repeatedPairs[i][0] === repeatedPairs[i - 1][0]) {
-				
-				if (repeatedPairs[i].length <= repeatedPairs[i - 1].length) {
-					repeatedPairs.splice(i, 1);
+		return wordMatrix.reduceRepetitions(repetitions, searchDistance);
+		
+	};
+	
+	wordMatrix.reduceRepetitions = function(repetitions, searchDistance) {
+		// соединяет повторы в цепочки, чтобы они отображались одним цветом
+		repetitions = repetitions.sort(function(a, b) { return a[0] - b[0]; });
+		for (var r = 0; r < repetitions.length; ++r) {
+			if (repetitions[r].length === 0) { continue; }
+			for (var rr = r + 1; rr < repetitions.length; ++rr) {
+				if ((repetitions[rr][0] - repetitions[r][repetitions[r].length - 1]) > searchDistance) {
+					break; // не листает дальше заданного расстояния между словами
 				}
-				else {
-					repeatedPairs.splice(i - 1, 1);
-					i--;
+				var intersections = repetitions[r].filter(function(item) {
+					return (repetitions[rr].indexOf(item) !== -1); // сравнение двух цепочек
+				}); 
+				if (intersections.length > 0) {
+					repetitions[r] = repetitions[r].concat(repetitions[rr].filter(function(item) {
+						return (repetitions[r].indexOf(item) < 0);
+					})).sort(function(a, b) { return a - b; });
+					repetitions[rr] = [];
 				}
 			}
 		}
-		
-		
-		return repeatedPairs;
-		
+		return repetitions;
 	};
 	
 	return { wordMatrix: wordMatrix };
