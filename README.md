@@ -1,5 +1,5 @@
 # Repeated Words Finder for Russian (HTML / JS)
 
-Finds repeated words in Russian texts
+Поиск повторов слов в текстах на русском языке
 
 ![App overview](screenshot.png)
