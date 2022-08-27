@@ -67,6 +67,7 @@ window.addEventListener('load', function(event) {
 		}, 100);
 	});
 	
+	ui.distance.value = 70; // default word distance for repetitions occurrences
 	
 	ui.submit.addEventListener('click', function(event) {
 		event.preventDefault();
@@ -95,7 +96,7 @@ window.addEventListener('load', function(event) {
 					++highlightStyle;
 					for(var p = 0; p < repetitions[r].length; ++p) {
 						if (nodeList.item(repetitions[r][p])) {
-							nodeList.item(repetitions[r][p]).className = "form-view-highlight form-view-highlight" + (highlightStyle % 7);
+							nodeList.item(repetitions[r][p]).className = "form-view-highlight form-view-highlight" + (highlightStyle % 10);
 						}
 					}
 				}

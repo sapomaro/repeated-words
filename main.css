@@ -109,9 +109,12 @@ h1 {
 }
 .form-view-highlight { text-decoration: underline; }
 .form-view-highlight0 { color: red; }
-.form-view-highlight1 { color: green; }
+.form-view-highlight1 { color: gold; }
 .form-view-highlight2 { color: blue; }
 .form-view-highlight3 { color: fuchsia; }
 .form-view-highlight4 { color: lime; }
 .form-view-highlight5 { color: aqua; }
-.form-view-highlight6 { color: yellow; }
+.form-view-highlight6 { color: green; }
+.form-view-highlight7 { color: orange; }
+.form-view-highlight8 { color: olive; }
+.form-view-highlight9 { color: teal; }
