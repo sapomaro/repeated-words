@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=0.5">
+	<link rel="stylesheet" href="main.css">
+	<title>🔁 Поиск повторов слов v0.3.3</title>
+</head>
+<body lang="ru">
+	<div id="container">
+		<h1>Поиск повторов слов</h1>
+		<form name="repetitions">
+			<div class="form-controls">
+				<div class="form-controls-left">
+					<button name="submit" class="form-button">
+						<b id="form-indicator"></b> Найти повторы на расстоянии: 
+					</button>&ensp;
+					<input name="distance" class="form-field">&ensp;слов
+				</div>
+				<div class="form-controls-right">
+					<button name="delete" class="form-button">⌦ Очистить текст</button>
+				</div>
+			</div>
+			<div class="form-fieldset">
+				<output name="view" class="form-area form-view"></output>
+				<textarea name="edit" class="form-area form-edit" spellcheck="false"></textarea>
+			</div>
+			<button name="up" class="form-button"><b>⭱</b> Вернуться наверх</button>
+		</form>
+		<br><br><br>
+	</div>
+<script type="text/javascript">
+	window.LangToolsApp = {}; 
+</script>
+<script src='app-repeated-words-module.js'></script>
+<script src='app-rus-word-forms-module.js'></script>
+<script src='app-instantiation.js'></script>
+<!--<script src='tests.js'></script>-->
+</body>
+</html>
