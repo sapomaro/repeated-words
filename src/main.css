@@ -63,6 +63,7 @@ h1 {
 }
 
 .form-fieldset {
+	clear: both;
 	width: 100%; 
 	margin: 1ex 0;
 	border: 2px solid #333;
@@ -70,11 +71,12 @@ h1 {
 }
 .form-area {
 	font: 100%/1 monospace; 
-	width: 90%; 
+	width: 90%;
 	height: 30ex; 
 	display: block;
 	margin: 0; 
-	padding: 5%; 
+	padding: 5%;
+	/*box-sizing: border-box;*/
 	border: 2px solid transparent;
 	resize: none;
 	background: transparent;
@@ -109,6 +111,12 @@ h1 {
 .form-field {
 	width: 3em;
 }
+.form-summary {
+	width: 15em;
+	color: #999;
+}
+
+
 .form-button:active {
 	transform: scale(0.98);
 }

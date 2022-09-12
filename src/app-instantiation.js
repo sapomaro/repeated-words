@@ -7,18 +7,21 @@ window.addEventListener('load', function(event) {
 	
 	var ui = document.forms.repetitions;
 	ui.indicator = document.querySelector('#form-indicator');
-	
-	
+
 	
 	ui.viewUpdate = function() {
 		if (ui.edit.value === '') {
-			ui.view.innerHTML = 'Вставьте сюда текст...';
+			if (ui.edit.dataset && ui.edit.dataset.placeholder) {
+				ui.view.innerHTML = ui.edit.dataset.placeholder;
+			}
 		}
 		else {
 			ui.view.innerHTML = ui.edit.value;
 		}
 		ui.edit.autoResize();
 		ui.style.height = ui.edit.scrollHeight;
+		
+		//ui.summary.value = 'Загружено';
 	};
 	ui.toggleButtons = function(state) {
 		if (state === 0) {
@@ -50,7 +53,49 @@ window.addEventListener('load', function(event) {
 	ui.viewUpdate();
 	ui.toggleButtons(1);
 	
-
+	
+	ui.distance.value = 70; // расстояние между словами по умолчанию для поиска повторов
+	
+	ui.submit.addEventListener('click', function(event) {
+		event.preventDefault();
+		ui.toggleButtons(0);
+		ui.edit.alignLines();
+		setTimeout(function() {
+			var text = ui.edit.value;
+			if (text !== '') { 
+				var distance = parseInt(ui.distance.value);
+				wordMatrix.build(text, wordFormsHandler);
+				var repetitions = wordMatrix.getRepetitions(distance);
+				ui.view.innerHTML = text.replace(/([А-ЯЁа-яёA-Za-z]+)/g, "<span>$1</span>");
+				var nodeList = ui.view.querySelectorAll('span');
+				var highlightStyle = 0;
+				for(var r = 0; r < repetitions.length; ++r) {
+					if (repetitions[r].length === 0) { continue; }
+					++highlightStyle;
+					for(var p = 0; p < repetitions[r].length; ++p) {
+						if (nodeList.item(repetitions[r][p])) {
+							nodeList.item(repetitions[r][p]).className = "form-view-highlight form-view-highlight" + (highlightStyle % 10);
+						}
+					}
+				}
+			}
+			ui.toggleButtons(1);
+		}, 1);
+		
+	});
+	
+	ui.delete.addEventListener('click', function(event) {
+		event.preventDefault();
+		ui.edit.value = '';
+		ui.edit.focus();
+		ui.viewUpdate();
+	});
+	
+	ui.up.addEventListener('click', function(event) {
+		event.preventDefault();
+		window.scrollTo(0, 0);
+	});
+	
 	ui.edit.addEventListener('paste', function() {
 		setTimeout(function() {
 			ui.edit.alignLines();
@@ -66,60 +111,5 @@ window.addEventListener('load', function(event) {
 			resizeTimer = null;
 		}, 100);
 	});
-	
-	ui.distance.value = 70; // default word distance for repetitions occurrences
-	
-	ui.submit.addEventListener('click', function(event) {
-		event.preventDefault();
-		
-		ui.toggleButtons(0);
-		
-		ui.edit.alignLines();
-		
-		setTimeout(function() {
-			var text = ui.edit.value;
-			if (text !== '') { 
-				var distance = parseInt(ui.distance.value);
-				wordMatrix.build(text, wordFormsHandler);
-				
-				var repetitions = wordMatrix.getRepetitions(distance);
-				
-				ui.view.innerHTML = text.replace(/([А-ЯЁа-яёA-Za-z]+)/g, "<span>$1</span>");
-
-				var nodeList = ui.view.querySelectorAll('span');
-				
-				//alert(JSON.stringify(repetitions)); 
-				
-				var highlightStyle = 0;
-				for(var r = 0; r < repetitions.length; ++r) {
-					if (repetitions[r].length === 0) { continue; }
-					++highlightStyle;
-					for(var p = 0; p < repetitions[r].length; ++p) {
-						if (nodeList.item(repetitions[r][p])) {
-							nodeList.item(repetitions[r][p]).className = "form-view-highlight form-view-highlight" + (highlightStyle % 10);
-						}
-					}
-				}
-			}
-			
-			ui.toggleButtons(1);
-
-			
-		}, 1);
-		
-	});
-	
-	ui.delete.addEventListener('click', function(event) {
-		event.preventDefault();
-		ui.edit.value = '';
-		ui.viewUpdate();
-	});
-	
-	ui.up.addEventListener('click', function(event) {
-		event.preventDefault();
-		window.scrollTo(0, 0);
-	});
-	
-
 	
 });

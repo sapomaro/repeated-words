@@ -12,6 +12,7 @@ window.LangToolsApp.RepeatedWordsModule = (function() {
 	};
 		
 	wordMatrix.build = function(text, wordFormsHandler) {
+		// создаёт матрицу возможных словоформ (слово целиком, корень слова, слово без приставки, слово без суффикса)
 		var wordsArray = this.parseInputText(text);
 		var word = '';
 		var wordForms = [];
@@ -45,6 +46,8 @@ window.LangToolsApp.RepeatedWordsModule = (function() {
 	};
 	
 	wordMatrix.compareEach = function() {
+		// проходит по всей матрице словоформ (для слов длиной не менее 6 букв)
+		// для применения дополнительных алгоритмов сравнения
 		for (var word in this.matrix) {
 			if (word.length < 6) { continue; }
 			if (this.matrix.hasOwnProperty(word) === false) { continue; }
