@@ -5,7 +5,7 @@ window.LangToolsApp.RusWordFormsModule = (function() {
 	var parseMorphemes = function(line) { // преобразует части слов в упорядоченный массив
 		return line.replace('ё', 'е')
 			.split(/[^А-ЯЁа-яё]+/)
-			.sort(function(a, b) { return b.length - a.length; });
+			.sort(function(a, b) { return a.length - b.length; });
 	};
 
 	var prefixes = parseMorphemes(
@@ -29,7 +29,8 @@ window.LangToolsApp.RusWordFormsModule = (function() {
 		'-чик, -щик, -ник, -ир, -ниц-, -к-, -иц-, -юх, -ёнок, -ушк-, -ышк-, -ость, -ост-, -як, -ун, -ач, '+
 		'-ущ-, -ив-, -ивн-, -чив-, -лив-, -ист-, -ск-, -еск-, -ов-, -ев-, -н-, -евит-, -ин-, -ова-, -ева-, '+
 		'-ыва-, -и-, -я-, -е-, -а-, -а, -о, -у, -ийск-, -ств-, -еств, -арн-, -арик, -ац-, -ь'+
-		'-от-, -лог'
+		'-от-, -лог, '+
+		'-чн- ' // upd 2022-09-12
 	); // , -ход
 	var endings = parseMorphemes( 
 		'-а, -ам, -ами, -ас, -ах, -ая, -е, -её, -ей, -ем, -еми, -емя,'+
@@ -43,16 +44,18 @@ window.LangToolsApp.RusWordFormsModule = (function() {
 		'-ому, -ему, -ой, -ей, -ым, -им, -ую, -юю, -ыми, -ими, -ом, -ем' // прил. дат./вин./твор.п.
 	); 
 	var unbreakableRoots = parseMorphemes( // проблемные корни, которые могут быть неверно разбиты
-		'ваш, век, вер, вес, вид, вод, вред, вечер, власт, вопрос, войн, втор, возраж, '+
+		'ваш, век, вер, вес, вид, вод, вред, вечер, власт, вопрос, войн, втор, '+
+		'восто, возраж, '+
 		'газон, дел, доход, доступ, долж, закон, заслон, запад, истор, '+
 		'крат, крыл, мыш, начал, начин, недел, наш, '+
 		'област, образ, остров, отраж, обреч, '+
 		'пут, пора, получ, полн, прав, правл, правил, проект, прост, постав, '+
 		'процесс, преступ, планет, полит, послед, продолж, предел, повестк, '+
+		'провер, '+
 		'рад, развит, разработ, '+
 		'сид, свиде, след, слов, случ, стран, сил, систем, средств, стол, столиц, сведен, '+ 
 		'сторон, связ, ситуац, союз, совет, стат, суверен, содерж, соверш, свет, слон,'+
-		'тиш, тест, '+
+		'тиш, тест, точк, '+
 		'удел, устав, услов, участ, уваж, уступ, улиц, указ, формул'
 	); 
 	
@@ -76,13 +79,18 @@ window.LangToolsApp.RusWordFormsModule = (function() {
 			return [word, wordRoot, wordRootPrefixed, wordRootSuffixed]; 
 		}
 		
-		for (var r = 0; r < unbreakableRoots.length; ++r) { // проверка на наличие проблемного корня
-			if (word.length < unbreakableRoots[r].length) { continue; }
+		
+		for (var r = unbreakableRoots.length - 1; r >= 0; --r) { // проверка на наличие проблемного корня
+			if (word.length < unbreakableRoots[r].length) { 
+				continue; 
+			}
 			if (word.indexOf(unbreakableRoots[r]) !== -1){
 				wordRootMatched = unbreakableRoots[r];
 				break;
 			}
 		}
+	
+//alert(wordRootMatched);
 		
 		var parseSequence = [[endings, 2], [suffixes, 2], [suffixes, 3], [prefixes, -3]];
 		// порядок отсечения аффиксов: тип + количество букв, которые должны остаться у корня
@@ -95,14 +103,18 @@ window.LangToolsApp.RusWordFormsModule = (function() {
 			var possibleAffixLength = wordRoot.length - Math.abs(minRootSize);
 			var wordChunk = '';
 			
-			for (var i = 0; i < affixes.length; ++i) {
-				if (affixes[i].length > possibleAffixLength) { continue; }
+			for (var i = affixes.length - 1; i >= 0; --i) {
+				if (affixes[i].length > possibleAffixLength) {
+					continue; 
+				}
 				if (minRootSize > 0 && affixes[i] === wordRoot.slice(affixes[i].length * -1)) {
 					// отсечение суффиксов и окончаний
 					wordChunk = wordRoot.slice(0, affixes[i].length * -1); // возвращает корень без аффикса
+
 					if (wordRootMatched && wordChunk.indexOf(wordRootMatched) === -1) { 
 						continue; // если часть корня пропадает при отсечении аффикса, то ищется другой
 					}
+
 					wordRoot = wordChunk;
 					wordRootPrefixed = wordRoot;
 					if (p == 1) { wordRootSuffixed = wordRoot; }
@@ -110,7 +122,11 @@ window.LangToolsApp.RusWordFormsModule = (function() {
 				}
 				else if (minRootSize < 0 && affixes[i] === wordRoot.slice(0, affixes[i].length)) {
 					// отсечение приставок
-					wordRoot = wordRoot.slice(affixes[i].length);
+					wordChunk = wordRoot.slice(affixes[i].length);
+					if (wordRootMatched && wordChunk.indexOf(wordRootMatched) === -1) { 
+						continue; // если часть корня пропадает при отсечении аффикса, то ищется другой
+					}
+					wordRoot = wordChunk;
 					wordRootSuffixed = wordRootSuffixed.slice(affixes[i].length);
 					break;
 				}
@@ -119,6 +135,9 @@ window.LangToolsApp.RusWordFormsModule = (function() {
 				break; 
 			}
 		}
+		
+console.log([word, wordRoot, wordRootPrefixed, wordRootSuffixed]); 
+
 		return [word, wordRoot, wordRootPrefixed, wordRootSuffixed];
 	};
 	

@@ -46,13 +46,14 @@ window.LangToolsApp.RepeatedWordsModule = (function() {
 	};
 	
 	wordMatrix.compareEach = function() {
-		// проходит по всей матрице словоформ (для слов длиной не менее 6 букв)
+		// проходит по всей матрице словоформ (для слов длиной не менее 7 букв)
 		// для применения дополнительных алгоритмов сравнения
+		// раньше было 6 букв, но возникли коллизии (проверка-проведение)
 		for (var word in this.matrix) {
-			if (word.length < 6) { continue; }
+			if (word.length < 7) { continue; }
 			if (this.matrix.hasOwnProperty(word) === false) { continue; }
 			for (var word2 in this.matrix) {
-				if (word2.length < 6) { continue; }
+				if (word2.length < 7) { continue; }
 				if (this.matrix.hasOwnProperty(word2) === false) { continue; }
 				if (this.matrix[word] === this.matrix[word2]) { continue; }
 				
