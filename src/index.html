@@ -1,50 +1,53 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<meta http-equiv="cache-control" content="no-cache">
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=0.5">
-	<link rel="stylesheet" href="main.css">
-	<title>🔁 Поиск повторов слов v0.3.3</title>
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=0.5">
+  <link rel="stylesheet" href="main.css">
+  <title>🔁 Поиск повторов слов v0.4</title>
 </head>
 <body lang="ru">
-	<div id="container">
-		<h1>Поиск повторов слов</h1>
-		<form name="repetitions">
-			<div class="form-controls">
-				<div class="form-controls-left">
-					<button name="submit" class="form-button">
-						<b id="form-indicator"></b> Найти повторы на расстоянии: 
-					</button>&ensp;
-					<input name="distance" class="form-field">&ensp;слов
-				</div>
-				<div class="form-controls-right">
-					<button name="delete" class="form-button">⌦ Очистить текст</button>
-				</div>
-			</div>
-			<div class="form-fieldset">
-				<output name="view" class="form-area form-view"></output>
-				<textarea name="edit" class="form-area form-edit" spellcheck="false" data-placeholder="Вставьте сюда текст..."></textarea>
-			</div>
-			<div class="form-controls">
-				<button name="up" class="form-button"><b>⭱</b> Вернуться наверх</button>
-				<!--
-				<div class="form-controls-left">
-					
-				</div>
-				<div class="form-controls-right">
-					<input name="summary" class="form-field form-summary" readonly="readyonly">
-				</div>-->
-			</div>
-		</form>
-		<br><br><br>
-	</div>
+  <div id="container">
+    <h1>Поиск повторов слов</h1>
+    <form name="repetitions">
+      <div class="form-controls">
+        <div class="form-controls-left">
+          <button name="submit" class="form-button">
+            <b id="indicator" data-idle-value="⭾" data-loading-value="⌛"></b> 
+            Найти повторы на расстоянии: 
+          </button>&ensp;
+          <input name="distance" class="form-field">&ensp;слов
+        </div>
+        <div class="form-controls-right">
+          <button name="delete" class="form-button">⌦ Очистить текст</button>
+        </div>
+      </div>
+      <div class="form-fieldset">
+        <div id="mock" class="form-area form-mock"></div>
+        <textarea name="text" class="form-area form-text" spellcheck="false"
+          data-placeholder="Вставьте сюда текст..."></textarea>
+      </div>
+      <div class="form-controls">
+        <button name="up" class="form-button"><b>⭱</b> Вернуться наверх</button>
+        <!--
+        <div class="form-controls-left">
+          
+        </div>
+        <div class="form-controls-right">
+          <input name="summary" class="form-field form-summary" readonly="readyonly">
+        </div>-->
+      </div>
+    </form>
+    <br><br><br>
+  </div>
 <script type="text/javascript">
-	window.LangToolsApp = {}; 
+  window.DuplicateWordsApp = {}; 
 </script>
-<script src='app-repeated-words-module.js'></script>
-<script src='app-rus-word-forms-module.js'></script>
-<script src='app-instantiation.js'></script>
+<script src='duplicate-finder.js'></script>
+<script src='duplicate-forms.js'></script>
+<script src='duplicate-dictionary.js'></script>
+<script src='instantiation.js'></script>
 <!--<script src='tests.js'></script>-->
 </body>
 </html>

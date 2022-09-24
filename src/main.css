@@ -1,135 +1,135 @@
 html, body {
-	position: relative; 
-	width: 100%;
-	min-height: 100%; 
-	height: 100%; 
-	margin: 0; 
-	padding: 0; 
-	background: #f3f3f3;
-	font: 18px/18px "Arial Unicode",Arial,Helvetica,sans-serif;
+  position: relative; 
+  width: 100%;
+  min-height: 100%; 
+  height: 100%; 
+  margin: 0; 
+  padding: 0; 
+  background: #f3f3f3;
+  font: 18px/18px "Arial Unicode",Arial,Helvetica,sans-serif;
 }
 
 @media (min-width:320px) {
-	body {
-		font-size: 36px; 
-		line-height: 36px;
-	}
-	#container {
-		width: 100%;
-	}
+  body {
+    font-size: 36px; 
+    line-height: 36px;
+  }
+  #container {
+    width: 100%;
+  }
 }
 @media (min-width:800px) {
-	body {
-		font-size: 18px; 
-		line-height: 18px;
-	}
-	#container {
-		width: 40em;
-	}
+  body {
+    font-size: 18px; 
+    line-height: 18px;
+  }
+  #container {
+    width: 40em;
+  }
 }
 
 #container {
-	position: relative; 
-	/*display: inline-block;
-	min-width: 100%;*/
-	
-	min-height: 100%; 
-	height: 100%;
-	margin: 0 auto;
+  position: relative; 
+  /*display: inline-block;
+  min-width: 100%;*/
+  
+  min-height: 100%; 
+  height: 100%;
+  margin: 0 auto;
 }
 
 #load-indicator {
-	border:2px solid transparent;
+  border:2px solid transparent;
 }
 h1 {
-	margin: 2ex 0;
-	line-height: 1;
-	color: #333;
+  margin: 2ex 0;
+  line-height: 1;
+  color: #333;
 }
 
 .form-controls {
-	clear: both;
+  clear: both;
 }
 .form-controls:after {
-	content: "";
-	display: table;
-	clear: both;
+  content: "";
+  display: table;
+  clear: both;
 }
 .form-controls-left {
-	float: left;
+  float: left;
 }
 .form-controls-right {
-	float: right;
+  float: right;
 }
 
 .form-fieldset {
-	clear: both;
-	width: 100%; 
-	margin: 1ex 0;
-	border: 2px solid #333;
-	background: #fff;
+  clear: both;
+  width: 100%; 
+  margin: 1ex 0;
+  border: 2px solid #333;
+  background: #fff;
 }
 .form-area {
-	font: 100%/1 monospace; 
-	width: 90%;
-	height: 30ex; 
-	display: block;
-	margin: 0; 
-	padding: 5%;
-	/*box-sizing: border-box;*/
-	border: 2px solid transparent;
-	resize: none;
-	background: transparent;
-	white-space: pre-wrap;
-	overflow-wrap: break-word;
-	overflow: none; outline: none;
+  font: 100%/1 monospace; 
+  width: 90%;
+  height: 30ex; 
+  display: block;
+  margin: 0; 
+  padding: 5%;
+  /*box-sizing: border-box;*/
+  border: 2px solid transparent;
+  resize: none;
+  background: transparent;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  overflow: none; outline: none;
 }
-.form-view { 
-	position: absolute; 
-	z-index: 1; 
-	color: #aaa; 
+.form-mock { 
+  position: absolute; 
+  z-index: 1; 
+  color: #aaa; 
 }
-.form-edit { 
-	position: relative; 
-	z-index: 2; 
-	color: #333; 
+.form-text { 
+  position: relative; 
+  z-index: 2; 
+  color: #333; 
 }
 .form-button, .form-field {
-	font: 100%/1 monospace; 
-	box-sizing: border-box;
-	height: 5ex;
-	margin: 1ex 0;
-	padding: 10px;
-	border: 2px solid #333;
+  font: 100%/1 monospace; 
+  box-sizing: border-box;
+  height: 5ex;
+  margin: 1ex 0;
+  padding: 10px;
+  border: 2px solid #333;
 
-	outline: none;
+  outline: none;
 }
 .form-button {
-	background: #333;
-	color: #fff;
+  background: #333;
+  color: #fff;
 }
 .form-field {
-	width: 3em;
+  width: 3em;
 }
 .form-summary {
-	width: 15em;
-	color: #999;
+  width: 15em;
+  color: #999;
 }
 
 
 .form-button:active {
-	transform: scale(0.98);
+  transform: scale(0.98);
 }
 .form-button:disabled {
-	background: #999;
-	border-color: #999;
-	color: #fff;
-	transform: scale(1);
-	cursor: not-allowed;
+  background: #999;
+  border-color: #999;
+  color: #fff;
+  transform: scale(1);
+  cursor: not-allowed;
 }
 .form-field:disabled {
-	border-color: #999;
-	cursor: not-allowed;
+  border-color: #999;
+  cursor: not-allowed;
 }
 .form-view-highlight { text-decoration: underline; }
 .form-view-highlight0 { color: red; }
