@@ -81,6 +81,3 @@ window.DuplicateWordsApp.FormsModule = function(dict) {
 
   return wordFormsHandler;
 };
-
-
-

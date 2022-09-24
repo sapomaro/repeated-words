@@ -75,8 +75,7 @@ window.DuplicateWordsApp.FinderModule = function(wordFormsHandler) {
       }
     }
   };
-  
-  
+
   wordMatrix.getRepetitions = function(searchDistance) {
     // поиск совпадений на заданном расстоянии
     if (!searchDistance) { searchDistance = 50; }
@@ -134,5 +133,4 @@ window.DuplicateWordsApp.FinderModule = function(wordFormsHandler) {
   };
   
   return wordMatrix;
-  
 };

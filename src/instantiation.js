@@ -10,8 +10,10 @@ window.addEventListener('load', function(event) {
   ui.indicator = document.querySelector('#indicator');
   ui.distance.value = 70; // расстояние между словами по умолчанию для поиска повторов
 
-  ui.viewUpdate = function() {
-    ui.text.togglePlaceholder();
+  ui.viewUpdate = function(event) {
+    if (!event || event.type !== 'resize') {
+      ui.text.togglePlaceholder();
+    }
     ui.text.autoResize();
     ui.style.height = ui.text.scrollHeight;
   };
@@ -67,13 +69,16 @@ window.addEventListener('load', function(event) {
         ui.mock.innerHTML = text.replace(/([А-ЯЁа-яёA-Za-z]+)/g, "<span>$1</span>");
         var nodeList = ui.mock.querySelectorAll('span');
         var highlightStyle = 0;
+        var chainId = '';
         for(var r = 0; r < repetitions.length; ++r) {
           if (repetitions[r].length === 0) { continue; }
           ++highlightStyle;
+          chainId = 'chain_' + repetitions[r].join('_'); // цепочка повторов
           for(var p = 0; p < repetitions[r].length; ++p) {
             if (nodeList.item(repetitions[r][p])) {
-              nodeList.item(repetitions[r][p]).className = "form-view-highlight form-view-highlight" + 
-                (highlightStyle % 10);
+              nodeList.item(repetitions[r][p]).className = 'form-highlight ' + 
+                'form-highlight' + (highlightStyle % 10) + ' ' +
+                chainId;
             }
           }
         }
@@ -87,7 +92,7 @@ window.addEventListener('load', function(event) {
     event.preventDefault();
     ui.text.value = '';
     ui.text.focus();
-    ui.viewUpdate();
+    ui.viewUpdate(event);
   });
 
   ui.up.addEventListener('click', function(event) {
@@ -95,10 +100,10 @@ window.addEventListener('load', function(event) {
     window.scrollTo(0, 0);
   });
 
-  ui.text.addEventListener('paste', function() {
+  ui.text.addEventListener('paste', function(event) {
     setTimeout(function() {
       ui.text.padLines();
-      ui.viewUpdate();
+      ui.viewUpdate(event);
     }, 1);
   });
 
@@ -106,13 +111,13 @@ window.addEventListener('load', function(event) {
   window.addEventListener('resize', function(event) {
     if (resizeTimer) { return null; }
     resizeTimer = setTimeout(function() {
-      ui.viewUpdate();
+      ui.viewUpdate(event);
       resizeTimer = null;
     }, 100);
   });
 
   ui.text.addEventListener('input', ui.viewUpdate);
-  ui.text.addEventListener('keyup', ui.viewUpdate);
+  //ui.text.addEventListener('keyup', ui.viewUpdate);
 
   ui.viewUpdate();
   ui.toggleState('idle');
