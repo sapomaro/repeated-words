@@ -9,11 +9,13 @@ window.addEventListener('load', function(event) {
   ui.mock = document.querySelector('#mock');
   ui.indicator = document.querySelector('#indicator');
   ui.distance.value = 70; // расстояние между словами по умолчанию для поиска повторов
-
+  ui.styles = document.querySelector('style');
+      
   ui.viewUpdate = function(event) {
     if (!event || event.type !== 'resize') {
       ui.text.togglePlaceholder();
       ui.summary.update();
+      ui.styles.innerHTML = '';
     }
     ui.autoResize(ui.text);
     ui.style.height = ui.text.scrollHeight;
@@ -83,13 +85,12 @@ window.addEventListener('load', function(event) {
       var wordPos = wordsArray.length - 1;
       var nodeList = ui.mock.querySelectorAll('span');
       var node;
-      var style = document.querySelector('style');
       if (node = nodeList.item(wordPos)) {
-        if (style && node.className && window.getComputedStyle) {
+        if (ui.styles && node.className && window.getComputedStyle) {
           var chainClass = node.className.match(/chain_[0-9_]+/); // класс цепочки повторов
           var color = window.getComputedStyle(node).getPropertyValue('color');
           color = color.replace(/rgb\(([0-9, ]+)\)/, 'rgba($1, 0.3)');
-          style.innerHTML = '.' + chainClass + '{ background:'+ color +'; }';
+          ui.styles.innerHTML = '.' + chainClass + '{ background:'+ color +'; }';
         }
 
       }

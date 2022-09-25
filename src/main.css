@@ -56,6 +56,15 @@ table, tr, td {
   border: none;
 }
 
+.form-areaset {
+  position: relative;
+  min-height: 40ex;
+  width: 100%;
+  margin: 1ex 0;
+  border: 2px solid #333;
+  background: #fff;
+}
+
 .form-area {
   font: 100%/1 monospace; 
   display: block;
@@ -68,18 +77,11 @@ table, tr, td {
   outline: none;
 }
 
-.form-areaset {
-  width: 100%; 
-  margin: 1ex 0;
-  border: 2px solid #333;
-  background: #fff;
-}
-
 .form-mock, .form-text {
+  min-height: 40ex;
   width: 90%;
   padding: 5%;
   margin: 0;
-  min-height: 40ex;
 }
 
 .form-mock { 
