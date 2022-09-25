@@ -1,576 +1,721 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<meta http-equiv="cache-control" content="no-cache">
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=0.5">
-	<title>🔁 Поиск повторов слов v0.3.3</title>
-	<style type="text/css">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="main.css">
+  <style type="text/css"></style>
+  <style type="text/css">
 html, body {
-	position: relative; 
-	width: 100%;
-	min-height: 100%; 
-	height: 100%; 
-	margin: 0; 
-	padding: 0; 
-	background: #f3f3f3;
-	font: 18px/18px "Arial Unicode",Arial,Helvetica,sans-serif;
+  position: relative; 
+  width: 100%;
+  min-height: 100%; 
+  height: 100%; 
+  margin: 0; 
+  padding: 0; 
+  background: #f3f3f3;
+  font: 18px/18px "Arial Unicode",Arial,Helvetica,sans-serif;
 }
 
-@media (min-width:320px) {
-	body {
-		font-size: 36px; 
-		line-height: 36px;
-	}
-	#container {
-		width: 100%;
-	}
-}
-@media (min-width:800px) {
-	body {
-		font-size: 18px; 
-		line-height: 18px;
-	}
-	#container {
-		width: 40em;
-	}
+.container {
+  position: relative; 
+  min-height: 100%; 
+  height: 100%;
+  width: 50em;
+  margin: 0 auto;
 }
 
-#container {
-	position: relative; 
-	/*display: inline-block;
-	min-width: 100%;*/
-	
-	min-height: 100%; 
-	height: 100%;
-	margin: 0 auto;
+@media (max-width:800px) {
+  body {
+    font-size: 24px; 
+    line-height: 24px;
+  }
+  .container {
+    width: 100%;
+  }
 }
 
-#load-indicator {
-	border:2px solid transparent;
+.container-main {
+  position: relative;
+  width: 39em;
+  vertical-align: top;
 }
+.container-controls {
+  position: relative;
+  width: 10em;
+  padding-left: 1em;
+  vertical-align: top;
+}
+
+.sticky-controls {
+  position: sticky;
+  top: 1em;
+}
+
 h1 {
-	margin: 2ex 0;
-	line-height: 1;
-	color: #333;
+  margin: 2ex 0;
+  line-height: 1;
+  color: #333;
 }
 
-.form-controls {
-	clear: both;
-}
-.form-controls:after {
-	content: "";
-	display: table;
-	clear: both;
-}
-.form-controls-left {
-	float: left;
-}
-.form-controls-right {
-	float: right;
+table, tr, td {
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
-.form-fieldset {
-	clear: both;
-	width: 100%; 
-	margin: 1ex 0;
-	border: 2px solid #333;
-	background: #fff;
+.form-areaset {
+  position: relative;
+  min-height: 40ex;
+  width: 100%;
+  margin: 1ex 0;
+  border: 2px solid #333;
+  background: #fff;
 }
+
 .form-area {
-	font: 100%/1 monospace; 
-	width: 90%;
-	height: 30ex; 
-	display: block;
-	margin: 0; 
-	padding: 5%;
-	/*box-sizing: border-box;*/
-	border: 2px solid transparent;
-	resize: none;
-	background: transparent;
-	white-space: pre-wrap;
-	overflow-wrap: break-word;
-	overflow: none; outline: none;
+  font: 100%/1 monospace; 
+  display: block;
+  border: none;
+  resize: none;
+  background: transparent;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  overflow: hidden; 
+  outline: none;
 }
-.form-view { 
-	position: absolute; 
-	z-index: 1; 
-	color: #aaa; 
+
+.form-mock, .form-text {
+  min-height: 40ex;
+  width: 90%;
+  padding: 5%;
+  margin: 0;
 }
-.form-edit { 
-	position: relative; 
-	z-index: 2; 
-	color: #333; 
+
+.form-mock { 
+  position: absolute; 
+  z-index: 1; 
+  color: #aaa; 
 }
+
+.form-text { 
+  position: relative; 
+  z-index: 2; 
+  color: #333; 
+}
+
 .form-button, .form-field {
-	font: 100%/1 monospace; 
-	box-sizing: border-box;
-	height: 5ex;
-	margin: 1ex 0;
-	padding: 10px;
-	border: 2px solid #333;
-
-	outline: none;
+  font: 100%/1 monospace; 
+  box-sizing: border-box;
+  display: inline-block;
+  min-height: 5ex;
+  margin: 1ex 0;
+  padding: 10px;
+  border: 2px solid #333;
+  outline: none;
+  text-align: left;
+  vertical-align: middle;
 }
+
 .form-button {
-	background: #333;
-	color: #fff;
-}
-.form-field {
-	width: 3em;
-}
-.form-summary {
-	width: 15em;
-	color: #999;
+  width: 100%;
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+  letter-spacing: -1px;
 }
 
+.form-field {
+  width: 3em;
+  text-align: center;
+}
+.form-comment {
+  font-size: 90%;
+  line-height: 90%;
+  display: inline-block;
+  width: 6em;
+  vertical-align: middle;
+}
+
+h2 {
+  font-size: inherit;
+  margin: 1em 0;
+  padding: 0;
+  color: #333;
+}
+
+.form-summary {
+  font-size: 90%;
+  line-height: 90%;
+  display: inline-block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0;
+  margin: 1em 0;
+  color: #333;
+  letter-spacing: -1pt;
+}
 
 .form-button:active {
-	transform: scale(0.98);
+  transform: scale(0.98);
 }
+
 .form-button:disabled {
-	background: #999;
-	border-color: #999;
-	color: #fff;
-	transform: scale(1);
-	cursor: not-allowed;
+  background: #999;
+  border-color: #999;
+  color: #fff;
+  transform: scale(1);
+  cursor: not-allowed;
 }
+
 .form-field:disabled {
-	border-color: #999;
-	cursor: not-allowed;
+  border-color: #999;
+  cursor: not-allowed;
 }
-.form-view-highlight { text-decoration: underline; }
-.form-view-highlight0 { color: red; }
-.form-view-highlight1 { color: gold; }
-.form-view-highlight2 { color: blue; }
-.form-view-highlight3 { color: fuchsia; }
-.form-view-highlight4 { color: lime; }
-.form-view-highlight5 { color: aqua; }
-.form-view-highlight6 { color: green; }
-.form-view-highlight7 { color: orange; }
-.form-view-highlight8 { color: olive; }
-.form-view-highlight9 { color: teal; }
-	</style>
+
+.form-highlight { text-decoration: underline; }
+.form-highlight0 { color: red; }
+.form-highlight1 { color: gold; }
+.form-highlight2 { color: blue; }
+.form-highlight3 { color: fuchsia; }
+.form-highlight4 { color: lime; }
+.form-highlight5 { color: aqua; }
+.form-highlight6 { color: green; }
+.form-highlight7 { color: orange; }
+.form-highlight8 { color: olive; }
+.form-highlight9 { color: teal; }
+  </style>
+  <title>🔁 Поиск повторов слов v0.4.3</title>
 </head>
 <body lang="ru">
-	<div id="container">
-		<h1>Поиск повторов слов</h1>
-		<form name="repetitions">
-			<div class="form-controls">
-				<div class="form-controls-left">
-					<button name="submit" class="form-button">
-						<b id="form-indicator"></b> Найти повторы на расстоянии: 
-					</button>&ensp;
-					<input name="distance" class="form-field">&ensp;слов
-				</div>
-				<div class="form-controls-right">
-					<button name="delete" class="form-button">⌦ Очистить текст</button>
-				</div>
-			</div>
-			<div class="form-fieldset">
-				<output name="view" class="form-area form-view"></output>
-				<textarea name="edit" class="form-area form-edit" spellcheck="false" data-placeholder="Вставьте сюда текст..."></textarea>
-			</div>
-			<div class="form-controls">
-				<button name="up" class="form-button"><b>⭱</b> Вернуться наверх</button>
-				<!--
-				<div class="form-controls-left">
-					
-				</div>
-				<div class="form-controls-right">
-					<input name="summary" class="form-field form-summary" readonly="readyonly">
-				</div>-->
-			</div>
-		</form>
-		<br><br><br>
-	</div>
+  <div class="container">
+    <h1>Поиск повторов слов</h1>
+    <form name="repetitions">
+      <table>
+        <tr><td class="container-main">
+          <div class="form-areaset">
+            <div id="mock" class="form-area form-mock"></div>
+            <textarea name="text" class="form-area form-text" spellcheck="false"
+              data-placeholder="Вставьте сюда текст..."></textarea>
+          </div>
+        </td>
+        <td class="container-controls">
+          <div class="sticky-controls">
+            <button name="submit" class="form-button">
+              <b id="indicator" data-idle-value="⭾" data-loading-value="⌛"></b> 
+              Найти повторы 
+            </button>
+            <label>
+              <input name="distance" class="form-field">&nbsp;
+              <span class="form-comment">слов между повторами максимум</span>
+            </label>
+            <button name="delete" class="form-button">⌦ Очистить</button>
+            <button name="up" class="form-button"><b>⭱</b> Наверх</button>
+            <h2>Статистика:</h2>
+            <textarea name="summary" class="form-area form-summary" readonly="readonly"></textarea>
+          </div>
+        </td></tr>
+      </table>
+    </form>
+    <br><br><br>
+  </div>
 <script type="text/javascript">
-	window.LangToolsApp = {}; 
+  window.DuplicateWordsApp = {};
+  
+window.DuplicateWordsApp.FinderModule = function(wordFormsHandler) {
+  "use strict";
 
-window.LangToolsApp.RusWordFormsModule = (function() {
-	"use strict";
-	
-	var parseMorphemes = function(line) { // преобразует части слов в упорядоченный массив
-		return line.replace('ё', 'е')
-			.split(/[^А-ЯЁа-яё]+/)
-			.sort(function(a, b) { return b.length - a.length; });
-	};
+  var wordMatrix = {};
+  
+  wordMatrix.parseInputText = function(text) { // преобразует текст в упорядоченный массив
+    return text.replace('ё', 'е')
+      .split(/[^А-ЯЁа-яёA-Za-z]+/)
+      .filter(String);
+  };
+    
+  wordMatrix.build = function(text) {
+    // создаёт матрицу возможных словоформ (слово целиком, корень слова, слово без приставки, слово без суффикса)
+    var wordsArray = this.parseInputText(text);
+    var word = '';
+    var wordForms = [];
+    this.matrix = {};
+    
+    for (var pos = 0; pos < wordsArray.length; ++pos) {
+      pos = parseInt(pos);
+      word = wordsArray[pos].toLowerCase();
+      
+      if (!word) { continue; }
+      if (word.length < 2) { continue; }
 
-	var prefixes = parseMorphemes(
-		'в-, во-, взо-, вне-, внутри-, возо-, вы-, до-, еже-, за-, зако-,'+
-		'изо-, испод-, к-, кое-, ку-, меж-, междо-, между-, на-, над-, надо-, '+
-		'наи-, не-, недо-, ни-, низо-, о-, об-, обо-, около-, от-, ото-, па-, '+
-		'пере-, по-, под-, подо-, поза-, после-, пра-, пред-, преди-, предо-, про-,'+
-		'противо-, разо-, с-, со-, сверх-, среди-, су-, тре-, у-, без-, бес-, вз-,'+
-		'вс-, воз-, вос-, из-, ис-, низ-, нис-, обез-, обес-, раз-, рас-, роз-, рос-,'+
-		'через-, черес-, чрез-, чрес-, пре-, при-, зло-, взаимо-, псевдо-, анти-, гео-,'+
-		'везде-, много-, одно-, неодно-, дву-, двух'
-	);
-	var suffixes = parseMorphemes( 
-		'-айш-, -е-, -ее-, -ей-, -ейш-, -же-, -ше-, -л-, -ел-, -ти, -ть, -и, -ащ-,'+
-		'-ящ-, -вш-, -ш-, -ущ-, -ющ-, -ем-, -им-, -ом-, -нн-, -енн-, -онн-, -т-, -ить, -а-, -я-,'+
-		'-учи-, -ючи-, -вши-, -ши-, -ес-, -ен-, -ер-, -й-, -ейш-, -айш-, -к-, -ик-, '+
-		'-ек-, -ок-, -чик, -ёк-, -еньк-, -оньк-, -ечк-, -ичк-, -ич-, -очк-, -ашк-, -ашн-, -ишк-, -ашек-'+
-		'-ушк-, -юшк-, -ышк-, -ец-, -иц-, -енк-, -инк-, -онк-, -ин-, -ищ-, -ушек, -ышек,'+
-		'-ёныш, -еньк-, -оньк-, -ехоньк-, -оханьк-, -ёшеньк-, -ошеньк-, -ущ-, -ющ-, '+
-		'-юсеньк-, -енн-, -оват-, -еньк-, -оньк-, -енечко, -онечко, -еват, -оват, -тель, '+
-		'-чик, -щик, -ник, -ир, -ниц-, -к-, -иц-, -юх, -ёнок, -ушк-, -ышк-, -ость, -ост-, -як, -ун, -ач, '+
-		'-ущ-, -ив-, -ивн-, -чив-, -лив-, -ист-, -ск-, -еск-, -ов-, -ев-, -н-, -евит-, -ин-, -ова-, -ева-, '+
-		'-ыва-, -и-, -я-, -е-, -а-, -а, -о, -у, -ийск-, -ств-, -еств, -арн-, -арик, -ац-, -ь'+
-		'-от-, -лог'
-	); // , -ход
-	var endings = parseMorphemes( 
-		'-а, -ам, -ами, -ас, -ах, -ая, -е, -её, -ей, -ем, -еми, -емя,'+
-		'-ех, -ею, -ёт, -ёте, -ёх, -ёшь, -и, -ие, -ий, -ия, -им, -ими, -ит,'+
-		'-ите, -их, -ишь, -ию, -м, -ми, -мя, -о, -ов, -ого, -ое, -оё,'+
-		'-ой, -ом, -ому, -ою, -у, -ум, -умя, -ут, -ух, -ую, -шь, -ый, -ые'+
-		'-а, -я, -ы, -и, -ов, -ей, -е, -ам, -ям, -у, -ю,'+ // сущ. и.м.-в.п.
-		'-ой, -ёй, -ами, -ями, -ом, -ем, -ём, -ах, -ях,'+ // сущ. т.п.-п.п.
-		'-у, -ю, -ешь, -ет, -ем, -ете, -ут, -ют, -ишь, -ит, -им, -ите, -ат, -ят,'+ // гл. 1/2 спряж.
-		'-ый, -ий, -ая, -яя, -ое, -ее, -ые, -ие, -ого, -его, -ой, -ей, -ых, -их,'+ // прил. им./род.п.
-		'-ому, -ему, -ой, -ей, -ым, -им, -ую, -юю, -ыми, -ими, -ом, -ем' // прил. дат./вин./твор.п.
-	); 
-	var unbreakableRoots = parseMorphemes( // проблемные корни, которые могут быть неверно разбиты
-		'ваш, век, вер, вес, вид, вод, вред, вечер, власт, вопрос, войн, втор, возраж, '+
-		'газон, дел, доход, доступ, долж, закон, заслон, запад, истор, '+
-		'крат, крыл, мыш, начал, начин, недел, наш, '+
-		'област, образ, остров, отраж, обреч, '+
-		'пут, пора, получ, полн, прав, правл, правил, проект, прост, постав, '+
-		'процесс, преступ, планет, полит, послед, продолж, предел, повестк, '+
-		'рад, развит, разработ, '+
-		'сид, свиде, след, слов, случ, стран, сил, систем, средств, стол, столиц, сведен, '+ 
-		'сторон, связ, ситуац, союз, совет, стат, суверен, содерж, соверш, свет, слон,'+
-		'тиш, тест, '+
-		'удел, устав, услов, участ, уваж, уступ, улиц, указ, формул'
-	); 
-	
-	/*	спорные случаи: 
-			последний - последствия
-			снег - снежный
-			тема - темный
-			Нью-Дели - делить
-	*/
-	
-	var immutableRoots = 'никто, пока, ради, там, так, как, кто, что, раз, вне, при';
-	
-	
-	var wordFormsHandler = function(word) {
-		var wordRoot = word; // корень без аффиксов
-		var wordRootPrefixed = word; // корень с приставкой (для расширенного сопоставления)
-		var wordRootSuffixed = word; // корень с суффиксом (для расширенного сопоставления)
-		var wordRootMatched = false; // наличие проблемного корня
-		
-		if (immutableRoots.indexOf(wordRoot) !== -1 || unbreakableRoots.indexOf(wordRoot) !== -1) { 
-			return [word, wordRoot, wordRootPrefixed, wordRootSuffixed]; 
-		}
-		
-		for (var r = 0; r < unbreakableRoots.length; ++r) { // проверка на наличие проблемного корня
-			if (word.length < unbreakableRoots[r].length) { continue; }
-			if (word.indexOf(unbreakableRoots[r]) !== -1){
-				wordRootMatched = unbreakableRoots[r];
-				break;
-			}
-		}
-		
-		var parseSequence = [[endings, 2], [suffixes, 2], [suffixes, 3], [prefixes, -3]];
-		// порядок отсечения аффиксов: тип + количество букв, которые должны остаться у корня
-		// (отрицательное значение для приставок)
+      wordForms = wordFormsHandler(word); // word, wordRoot, wordRootSuffixed, wordRootPrefixed
+      
+      for (var f = 0; f < wordForms.length; ++f) {
+        if (f > 0 && word === wordForms[f]) { continue; }
+        
+        if ('undefined' === typeof this.matrix[wordForms[f]]) {
+          this.matrix[wordForms[f]] = [pos];
 
-		for (var p = 0; p < parseSequence.length; ++p) { // отсечение аффиксов от слова
+        } else if (this.matrix[wordForms[f]].indexOf(pos) === -1) {
+          this.matrix[wordForms[f]].push(pos);
+        }
 
-			var affixes = parseSequence[p][0]; 
-			var minRootSize = parseSequence[p][1];
-			var possibleAffixLength = wordRoot.length - Math.abs(minRootSize);
-			var wordChunk = '';
-			
-			for (var i = 0; i < affixes.length; ++i) {
-				if (affixes[i].length > possibleAffixLength) { continue; }
-				if (minRootSize > 0 && affixes[i] === wordRoot.slice(affixes[i].length * -1)) {
-					// отсечение суффиксов и окончаний
-					wordChunk = wordRoot.slice(0, affixes[i].length * -1); // возвращает корень без аффикса
-					if (wordRootMatched && wordChunk.indexOf(wordRootMatched) === -1) { 
-						continue; // если часть корня пропадает при отсечении аффикса, то ищется другой
-					}
-					wordRoot = wordChunk;
-					wordRootPrefixed = wordRoot;
-					if (p == 1) { wordRootSuffixed = wordRoot; }
-					break;
-				}
-				else if (minRootSize < 0 && affixes[i] === wordRoot.slice(0, affixes[i].length)) {
-					// отсечение приставок
-					wordRoot = wordRoot.slice(affixes[i].length);
-					wordRootSuffixed = wordRootSuffixed.slice(affixes[i].length);
-					break;
-				}
-			}
-			if (unbreakableRoots.indexOf(wordRoot) !== -1) { 
-				break; 
-			}
-		}
-		return [word, wordRoot, wordRootPrefixed, wordRootSuffixed];
-	};
-	
-	
-	
-	
-	return { wordFormsHandler: wordFormsHandler };
-})();
+      }
 
-window.LangToolsApp.RepeatedWordsModule = (function() {
-	"use strict";
-	
-	var exceptions = 'из, за, на, не, ни, по, бы, до, для, под'; // повторы, которые могут не учитываться
-	
-	var wordMatrix = {};
-	
-	wordMatrix.parseInputText = function(text) { // преобразует текст в упорядоченный массив
-		return text.replace('ё', 'е')
-			.split(/[^А-ЯЁа-яёA-Za-z]+/)
-			.filter(String);
-	};
-		
-	wordMatrix.build = function(text, wordFormsHandler) {
-		// создаёт матрицу возможных словоформ (слово целиком, корень слова, слово без приставки, слово без суффикса)
-		var wordsArray = this.parseInputText(text);
-		var word = '';
-		var wordForms = [];
-		this.matrix = {};
-		
-		for (var pos = 0; pos < wordsArray.length; ++pos) {
-			pos = parseInt(pos);
-			word = wordsArray[pos].toLowerCase();
-			
-			if (!word) { continue; }
-			if (word.length < 2) { continue; }
-			if (exceptions.indexOf(word) !== -1) { continue; }
-			
-			wordForms = wordFormsHandler(word); // word, wordRoot, wordRootSuffixed, wordRootPrefixed
-			
-			for (var f = 0; f < wordForms.length; ++f) { 
-				if (f > 0 && word === wordForms[f]) { continue; }
-				
-				if ('undefined' === typeof this.matrix[wordForms[f]]) {
-					this.matrix[wordForms[f]] = [pos];
+    }
+    
+    this.compareEach();
+  };
+  
+  wordMatrix.compareEach = function() {
+    // проходит по всей матрице словоформ (для слов длиной не менее 7 букв)
+    // для применения дополнительных алгоритмов сравнения
+    // раньше было 6 букв, но возникли коллизии (проверка-проведение)
+    for (var word in this.matrix) {
+      if (word.length < 7) { continue; }
+      if (this.matrix.hasOwnProperty(word) === false) { continue; }
+      for (var word2 in this.matrix) {
+        if (word2.length < 7) { continue; }
+        if (this.matrix.hasOwnProperty(word2) === false) { continue; }
+        if (this.matrix[word] === this.matrix[word2]) { continue; }
+        
+        this.compareLastLetter(word, word2);
+        
+      }
+    }
+  };
+  wordMatrix.compareLastLetter = function(word, word2) {
+    if (word.length === word2.length 
+      && word.slice(0, word.length - 1) === word2.slice(0, word2.length - 1)) {
+      // поиск совпадений слов, у которых отличается только одна буква в конце
+      var wordsMapChunk = this.matrix[word].concat(this.matrix[word2]);
+      for (var pos = 0; pos < wordsMapChunk.length; ++pos) {
+        wordsMapChunk[pos] = parseInt(wordsMapChunk[pos]);
+        if (this.matrix[word].indexOf(wordsMapChunk[pos]) === -1) {
+          this.matrix[word].push(wordsMapChunk[pos]);
+        }
+        if (this.matrix[word2].indexOf(wordsMapChunk[pos]) === -1) {
+          this.matrix[word2].push(wordsMapChunk[pos]);
+        }
+      }
+    }
+  };
 
-				} else if (this.matrix[wordForms[f]].indexOf(pos) === -1) {
-					this.matrix[wordForms[f]].push(pos);
-				}
+  wordMatrix.getRepetitions = function(searchDistance) {
+    // поиск совпадений на заданном расстоянии
+    if (!searchDistance) { searchDistance = 50; }
+    var repetitions = [];
+    var pairs = [];
+    
+    for (var word in this.matrix) {
+      if (this.matrix.hasOwnProperty(word) === false) { continue; }
+      if (this.matrix[word].length < 2) { continue; } // пролистываем словоформы, у которых нет совпадений
+      var wordPos = this.matrix[word].sort(function(a, b) { return a - b; });
+      for (var i = 1; i < wordPos.length; ++i) {
+        var wordsDistance = wordPos[i] - wordPos[i - 1];
+        if (wordsDistance > 0 && wordsDistance < searchDistance) {
+          if (pairs.indexOf(wordPos[i - 1]) === -1) {
+            pairs.push(wordPos[i - 1]);
+          }
+          pairs.push(wordPos[i]);
+        }
+        else if (pairs.length > 1) {
+          repetitions.push(pairs); 
+          pairs = [];
+        }
+      }
+      if (pairs.length > 1) {
+        repetitions.push(pairs); 
+        pairs = [];
+      }
+    }
+    
+    return wordMatrix.reduceRepetitions(repetitions, searchDistance);
+    
+  };
+  
+  wordMatrix.reduceRepetitions = function(repetitions, searchDistance) {
+    // соединяет повторы в цепочки, чтобы они отображались одним цветом
+    repetitions = repetitions.sort(function(a, b) { return a[0] - b[0]; });
+    for (var r = 0; r < repetitions.length; ++r) {
+      if (repetitions[r].length === 0) { continue; }
+      for (var rr = r + 1; rr < repetitions.length; ++rr) {
+        if ((repetitions[rr][0] - repetitions[r][repetitions[r].length - 1]) > searchDistance) {
+          break; // не листает дальше заданного расстояния между словами
+        }
+        var intersections = repetitions[r].filter(function(item) {
+          return (repetitions[rr].indexOf(item) !== -1); // сравнение двух цепочек
+        }); 
+        if (intersections.length > 0) {
+          repetitions[r] = repetitions[r].concat(repetitions[rr].filter(function(item) {
+            return (repetitions[r].indexOf(item) < 0);
+          })).sort(function(a, b) { return a - b; });
+          repetitions[rr] = [];
+        }
+      }
+    }
+    return repetitions;
+  };
+  
+  return wordMatrix;
+};
 
-			}
+window.DuplicateWordsApp.FormsModule = function(dict) {
+  "use strict";
 
-		}
-		
-		this.compareEach();
-	};
-	
-	wordMatrix.compareEach = function() {
-		// проходит по всей матрице словоформ (для слов длиной не менее 6 букв)
-		// для применения дополнительных алгоритмов сравнения
-		for (var word in this.matrix) {
-			if (word.length < 6) { continue; }
-			if (this.matrix.hasOwnProperty(word) === false) { continue; }
-			for (var word2 in this.matrix) {
-				if (word2.length < 6) { continue; }
-				if (this.matrix.hasOwnProperty(word2) === false) { continue; }
-				if (this.matrix[word] === this.matrix[word2]) { continue; }
-				
-				this.compareLastLetter(word, word2);
-				
-			}
-		}
-	};
-	wordMatrix.compareLastLetter = function(word, word2) {
-		if (word.length === word2.length 
-			&& word.slice(0, word.length - 1) === word2.slice(0, word2.length - 1)) {
-			// поиск совпадений слов, у которых отличается только одна буква в конце
-			var wordsMapChunk = this.matrix[word].concat(this.matrix[word2]);
-			for (var pos = 0; pos < wordsMapChunk.length; ++pos) {
-				wordsMapChunk[pos] = parseInt(wordsMapChunk[pos]);
-				if (this.matrix[word].indexOf(wordsMapChunk[pos]) === -1) {
-					this.matrix[word].push(wordsMapChunk[pos]);
-				}
-				if (this.matrix[word2].indexOf(wordsMapChunk[pos]) === -1) {
-					this.matrix[word2].push(wordsMapChunk[pos]);
-				}
-			}
-		}
-	};
-	
-	
-	wordMatrix.getRepetitions = function(searchDistance) {
-		// поиск совпадений на заданном расстоянии
-		if (!searchDistance) { searchDistance = 50; }
-		var repetitions = [];
-		var pairs = [];
-		
-		for (var word in this.matrix) {
-			if (this.matrix.hasOwnProperty(word) === false) { continue; }
-			if (this.matrix[word].length < 2) { continue; } // пролистываем словоформы, у которых нет совпадений
-			var wordPos = this.matrix[word].sort(function(a, b) { return a - b; });
-			for (var i = 1; i < wordPos.length; ++i) {
-				var wordsDistance = wordPos[i] - wordPos[i - 1];
-				if (wordsDistance > 0 && wordsDistance < searchDistance) {
-					if (pairs.indexOf(wordPos[i - 1]) === -1) {
-						pairs.push(wordPos[i - 1]);
-					}
-					pairs.push(wordPos[i]);
-				}
-				else if (pairs.length > 1) {
-					repetitions.push(pairs); 
-					pairs = [];
-				}
-			}
-			if (pairs.length > 1) {
-				repetitions.push(pairs); 
-				pairs = [];
-			}
-		}
-		
-		return wordMatrix.reduceRepetitions(repetitions, searchDistance);
-		
-	};
-	
-	wordMatrix.reduceRepetitions = function(repetitions, searchDistance) {
-		// соединяет повторы в цепочки, чтобы они отображались одним цветом
-		repetitions = repetitions.sort(function(a, b) { return a[0] - b[0]; });
-		for (var r = 0; r < repetitions.length; ++r) {
-			if (repetitions[r].length === 0) { continue; }
-			for (var rr = r + 1; rr < repetitions.length; ++rr) {
-				if ((repetitions[rr][0] - repetitions[r][repetitions[r].length - 1]) > searchDistance) {
-					break; // не листает дальше заданного расстояния между словами
-				}
-				var intersections = repetitions[r].filter(function(item) {
-					return (repetitions[rr].indexOf(item) !== -1); // сравнение двух цепочек
-				}); 
-				if (intersections.length > 0) {
-					repetitions[r] = repetitions[r].concat(repetitions[rr].filter(function(item) {
-						return (repetitions[r].indexOf(item) < 0);
-					})).sort(function(a, b) { return a - b; });
-					repetitions[rr] = [];
-				}
-			}
-		}
-		return repetitions;
-	};
-	
-	return { wordMatrix: wordMatrix };
-	
-})();
+  var wordFormsHandler = function(word) {
+    if (dict.exceptions.indexOf(word) !== -1) {
+      return [];
+    }
+    
+    var wordRoot = word; // корень без аффиксов
+    var wordRootPrefixed = word; // корень с приставкой (для расширенного сопоставления)
+    var wordRootSuffixed = word; // корень с суффиксом (для расширенного сопоставления)
+    var wordRootMatched = false; // наличие проблемного корня
+    
+    if (dict.immutableRoots.indexOf(wordRoot) !== -1 || dict.unbreakableRoots.indexOf(wordRoot) !== -1) { 
+      return [word, wordRoot, wordRootPrefixed, wordRootSuffixed]; 
+    }
+
+    for (var r = dict.unbreakableRoots.length - 1; r >= 0; --r) { // проверка на наличие проблемного корня
+      if (word.length < dict.unbreakableRoots[r].length) { 
+        continue; 
+      }
+      if (word.indexOf(dict.unbreakableRoots[r]) !== -1){
+        wordRootMatched = dict.unbreakableRoots[r];
+        break;
+      }
+    }
+
+    // порядок отсечения аффиксов: тип + количество букв, которые должны остаться у корня
+    // (отрицательное значение для приставок)
+    var parseSequence = [
+      [dict.endings, 2],
+      [dict.suffixes, 2],
+      [dict.suffixes, 3],
+      [dict.prefixes, -3]
+    ];
+
+    for (var p = 0; p < parseSequence.length; ++p) { // отсечение аффиксов от слова
+
+      var affixes = parseSequence[p][0]; 
+      var minRootSize = parseSequence[p][1];
+      var possibleAffixLength = wordRoot.length - Math.abs(minRootSize);
+      var wordChunk = '';
+      
+      for (var i = affixes.length - 1; i >= 0; --i) {
+        if (affixes[i].length > possibleAffixLength) {
+          continue; 
+        }
+        if (minRootSize > 0 && affixes[i] === wordRoot.slice(affixes[i].length * -1)) {
+          // отсечение суффиксов и окончаний
+          wordChunk = wordRoot.slice(0, affixes[i].length * -1); // возвращает корень без аффикса
+
+          if (wordRootMatched && wordChunk.indexOf(wordRootMatched) === -1) { 
+            continue; // если часть корня пропадает при отсечении аффикса, то ищется другой
+          }
+
+          wordRoot = wordChunk;
+          wordRootPrefixed = wordRoot;
+          if (p == 1) { wordRootSuffixed = wordRoot; }
+          break;
+        }
+        else if (minRootSize < 0 && affixes[i] === wordRoot.slice(0, affixes[i].length)) {
+          // отсечение приставок
+          wordChunk = wordRoot.slice(affixes[i].length);
+          if (wordRootMatched && wordChunk.indexOf(wordRootMatched) === -1) { 
+            continue; // если часть корня пропадает при отсечении аффикса, то ищется другой
+          }
+          wordRoot = wordChunk;
+          wordRootSuffixed = wordRootSuffixed.slice(affixes[i].length);
+          break;
+        }
+      }
+      if (dict.unbreakableRoots.indexOf(wordRoot) !== -1) { 
+        break; 
+      }
+    }
+    
+//console.log([word, wordRoot, wordRootPrefixed, wordRootSuffixed]); 
+
+    return [word, wordRoot, wordRootPrefixed, wordRootSuffixed];
+  };
+
+  return wordFormsHandler;
+};
+
+window.DuplicateWordsApp.DictionaryModule = function(lang) {
+  "use strict";
+  
+  if (lang !== 'ru') {
+    return null;
+  }
+
+  var dict = {};
+  
+  var parseMorphemes = function(line) { // преобразует части слов в упорядоченный массив
+    return line.replace(/ё/g, 'е')
+      .replace(/^[^а-яё]+/, '')
+      .replace(/[^а-яё]+$/, '')
+      .split(/[^а-яё]+/)
+      .sort(function(a, b) { return a.length - b.length; });
+  };
+  
+  /*  СПОРНЫЕ СЛУЧАИ: 
+      делить - делать - разделяемый - деловой - Нью-Дели
+      идет - идея
+      последний - последствия
+      снег - снежный
+      тема - темный
+      вместо - вместе
+      подсказка - высказать (?)
+      формат - форма - оформленный (?)
+      уходить - расходный (?)
+      распад - подпадает (?)
+      состояние - противостояние (?)
+  */
+  
+  // повторы, которые могут не учитываться
+  dict.exceptions = 'из, за, на, не, ни, по, бы, до, от, для, под, над'; 
+  
+  dict.immutableRoots = 'назад, никто, пока, ради, там, так, как, кто, что, раз, вне, при';
+  
+  dict.unbreakableRoots = parseMorphemes( // проблемные корни, которые могут быть неверно разбиты
+    'ваш, век, вер, вес, вид, вод, вред, вечер, власт, вопрос, войн, втор, '+
+    'восто, возраж, '+
+    'газон, дел, доход, доступ, доклад, долж, '+ 
+    'закон, заслон, запад, задач, '+
+    'июн, июл, истор, име, иде, ' +
+    'крат, крыл, мыш, мир, начал, начин, недел, наш, '+
+    'област, образ, остров, отраж, обреч, особ, '+
+    'пут, пора, получ, полн, прав, правл, правил, проект, прост, постав, '+
+    'процесс, преступ, планет, полит, послед, продолж, предел, повестк, '+
+    'провер, предлож, пространств, приним, призна, '+
+    'рад, развит, разработ, '+
+    'сид, свиде, след, слов, случ, стран, сил, систем, средств, стол, столиц, сведен, '+ 
+    'сторон, связ, ситуац, союз, совет, стат, суверен, содерж, соверш, свет, слон, '+
+    'состоя, '+
+    'тиш, тест, точк, толк, '+
+    'удел, устав, услов, участ, уваж, уступ, улиц, указ, формул'
+  ); 
+
+  dict.prefixes = parseMorphemes(
+    'в-, во-, взо-, вне-, внутри-, возо-, вы-, до-, еже-, за-, зако-,'+
+    'изо-, испод-, к-, кое-, ку-, меж-, междо-, между-, на-, над-, надо-, '+
+    'наи-, не-, недо-, ни-, низо-, о-, об-, обо-, около-, от-, ото-, па-, '+
+    'пере-, по-, под-, подо-, поза-, после-, пра-, пред-, преди-, предо-, про-,'+
+    'противо-, разо-, с-, со-, сверх-, среди-, су-, тре-, у-, без-, бес-, вз-,'+
+    'вс-, воз-, вос-, из-, ис-, низ-, нис-, обез-, обес-, раз-, рас-, роз-, рос-,'+
+    'через-, черес-, чрез-, чрес-, пре-, при-, зло-, взаимо-, псевдо-, анти-, гео-,'+
+    'везде-, много-, одно-, неодно-, дву-, двух'
+  );
+
+  dict.suffixes = parseMorphemes( 
+    '-айш-, -е-, -ее-, -ей-, -ейш-, -же-, -ше-, -л-, -ел-, -ти, -ть, -и, -ащ-,'+
+    '-ящ-, -вш-, -ш-, -ущ-, -ющ-, -ем-, -им-, -ом-, -нн-, -енн-, -онн-, -т-, -ить, -а-, -я-,'+
+    '-учи-, -ючи-, -вши-, -ши-, -ес-, -ен-, -ер-, -й-, -ейш-, -айш-, -к-, -ик-, '+
+    '-ек-, -ок-, -чик, -ёк-, -еньк-, -оньк-, -ечк-, -ичк-, -ич-, -очк-, -ашк-, -ашн-, -ишк-, -ашек-'+
+    '-ушк-, -юшк-, -ышк-, -ец-, -иц-, -енк-, -инк-, -онк-, -ин-, -ищ-, -ушек, -ышек,'+
+    '-ёныш, -еньк-, -оньк-, -ехоньк-, -оханьк-, -ёшеньк-, -ошеньк-, '+
+    '-юсеньк-, -енн-, -оват-, -еньк-, -оньк-, -енечко, -онечко, -еват, -оват, -тель, '+
+    '-чик, -щик, -ник, -ир, -ниц-, -к-, -иц-, -юх, -ёнок, -ушк-, -ышк-, -ость, -ост-, -як, -ун, -ач, '+
+    '-ив-, -ивн-, -чив-, -лив-, -ист-, -изм-, -ск-, -еск-, -ов-, -ев-, -н-, -евит-, -ин-, '+
+    '-ова-, -ева-, -ыва-, -и-, -я-, -е-, -а-, -а, -о, -у, -ийск-, -ств-, -еств, -арн-, -арик, -ац-,'+
+    '-от-, -лог, -ь, '+
+    '-чн-, -ованность, -явш-, -яющ-'
+  ); // , -ход
+
+  dict.endings = parseMorphemes( 
+    '-а, -ам, -ами, -ас, -ах, -ая, -е, -её, -ей, -ем, -еми, -емя,'+
+    '-ех, -ею, -ёт, -ёте, -ёх, -ёшь, -и, -ие, -ий, -ия, -им, -ими, -ит,'+
+    '-ите, -их, -ишь, -ию, -ми, -мя, -о, -ов, -ого, -ое, -оё,'+
+    '-ой, -ом, -ому, -ою, -у, -ум, -умя, -ут, -ух, -ую, -шь, -ый, -ые'+
+    '-а, -я, -ы, -и, -ов, -ей, -е, -ам, -ям, -у, -ю,'+ // сущ. и.м.-в.п.
+    '-ой, -ёй, -ами, -ями, -ом, -ем, -ём, -ах, -ях,'+ // сущ. т.п.-п.п.
+    '-у, -ю, -ешь, -ет, -ем, -ете, -ут, -ют, -ишь, -ит, -им, -ите, -ат, -ят,'+ // гл. 1/2 спряж.
+    '-ый, -ий, -ая, -яя, -ое, -ее, -ые, -ие, -ого, -его, -ой, -ей, -ых, -их,'+ // прил. им./род.п.
+    '-ому, -ему, -ой, -ей, -ым, -им, -ую, -юю, -ыми, -ими, -ом, -ем' + // прил. дат./вин./твор.п.
+    '-ийся, -егося, -емуся, -имся, -емся, -аяся, -ейся, -уюся, -ееся, ' + // причастия ед.ч.
+    '-иеся, -ихся, -имся, -имися' // причастия мн.ч.
+    // убрано: -м, 
+  ); 
+
+  return dict;
+};
 
 window.addEventListener('load', function(event) {
-	"use strict";
-	
-	var wordMatrix = LangToolsApp.RepeatedWordsModule.wordMatrix;
-	
-	var wordFormsHandler = LangToolsApp.RusWordFormsModule.wordFormsHandler;
-	
-	var ui = document.forms.repetitions;
-	ui.indicator = document.querySelector('#form-indicator');
+  "use strict";
 
-	
-	ui.viewUpdate = function() {
-		if (ui.edit.value === '') {
-			if (ui.edit.dataset && ui.edit.dataset.placeholder) {
-				ui.view.innerHTML = ui.edit.dataset.placeholder;
-			}
-		}
-		else {
-			ui.view.innerHTML = ui.edit.value;
-		}
-		ui.edit.autoResize();
-		ui.style.height = ui.edit.scrollHeight;
-		
-		//ui.summary.value = 'Загружено';
-	};
-	ui.toggleButtons = function(state) {
-		if (state === 0) {
-			ui.indicator.innerHTML = '⌛';
-			ui.submit.disabled = true;
-			ui.distance.disabled = true;
-		}
-		else {
-			ui.indicator.innerHTML = '⭾';
-			ui.submit.disabled = false;
-			ui.distance.disabled = false;
-		}
-	};
-	
-	ui.edit.autoResize = function() {
-		this.style.overflowY = 'hidden';
-		this.style.marginTop = this.scrollHeight + 'px'; 
-		this.style.minHeight = 0;
-		this.style.minHeight = this.scrollHeight + 'px'; 
-		this.style.marginTop = 0;
-	};
-	ui.edit.alignLines = function() {
-		this.value = this.value.replace(/\n+/g, "\n\n");
-	};
+  var dictionary = DuplicateWordsApp.DictionaryModule('ru');
+  var wordFormsHandler = DuplicateWordsApp.FormsModule(dictionary);
+  var wordMatrix = DuplicateWordsApp.FinderModule(wordFormsHandler);
 
-	
-	ui.edit.addEventListener('input', ui.viewUpdate);
-	ui.edit.addEventListener('keyup', ui.viewUpdate);
-	ui.viewUpdate();
-	ui.toggleButtons(1);
-	
-	
-	ui.distance.value = 70; // расстояние между словами по умолчанию для поиска повторов
-	
-	ui.submit.addEventListener('click', function(event) {
-		event.preventDefault();
-		ui.toggleButtons(0);
-		ui.edit.alignLines();
-		setTimeout(function() {
-			var text = ui.edit.value;
-			if (text !== '') { 
-				var distance = parseInt(ui.distance.value);
-				wordMatrix.build(text, wordFormsHandler);
-				var repetitions = wordMatrix.getRepetitions(distance);
-				ui.view.innerHTML = text.replace(/([А-ЯЁа-яёA-Za-z]+)/g, "<span>$1</span>");
-				var nodeList = ui.view.querySelectorAll('span');
-				var highlightStyle = 0;
-				for(var r = 0; r < repetitions.length; ++r) {
-					if (repetitions[r].length === 0) { continue; }
-					++highlightStyle;
-					for(var p = 0; p < repetitions[r].length; ++p) {
-						if (nodeList.item(repetitions[r][p])) {
-							nodeList.item(repetitions[r][p]).className = "form-view-highlight form-view-highlight" + (highlightStyle % 10);
-						}
-					}
-				}
-			}
-			ui.toggleButtons(1);
-		}, 1);
-		
-	});
-	
-	ui.delete.addEventListener('click', function(event) {
-		event.preventDefault();
-		ui.edit.value = '';
-		ui.edit.focus();
-		ui.viewUpdate();
-	});
-	
-	ui.up.addEventListener('click', function(event) {
-		event.preventDefault();
-		window.scrollTo(0, 0);
-	});
-	
-	ui.edit.addEventListener('paste', function() {
-		setTimeout(function() {
-			ui.edit.alignLines();
-			ui.viewUpdate();
-		}, 1);
-	});
-	
-	var resizeTimer = null;
-	window.addEventListener('resize', function(event) {
-		if (resizeTimer) { return null; }
-		resizeTimer = setTimeout(function() {
-			ui.viewUpdate();
-			resizeTimer = null;
-		}, 100);
-	});
-	
+  var ui = document.forms.repetitions; // text, distance, delete, up, summary
+  ui.mock = document.querySelector('#mock');
+  ui.indicator = document.querySelector('#indicator');
+  ui.distance.value = 70; // расстояние между словами по умолчанию для поиска повторов
+  ui.styles = document.querySelector('style');
+      
+  ui.viewUpdate = function(event) {
+    if (!event || event.type !== 'resize') {
+      ui.text.togglePlaceholder();
+      ui.summary.update();
+      ui.styles.innerHTML = '';
+    }
+    ui.autoResize(ui.text);
+    ui.style.height = ui.text.scrollHeight;
+  };
+
+  ui.toggleState = function(state) {
+    if (state === 'loading') {
+      ui.submit.disabled = true;
+      ui.distance.disabled = true;
+      ui.delete.disabled = true;
+    }
+    else if (state === 'idle') {
+      ui.submit.disabled = false;
+      ui.distance.disabled = false;
+      ui.delete.disabled = false;
+    }
+    if (ui.indicator.dataset && ui.indicator.dataset[state + 'Value']) {
+      ui.indicator.innerHTML = ui.indicator.dataset[state + 'Value'];
+    }
+  };
+  
+  ui.summary.update = function(stat) {
+    var summary = '';
+    if (!stat) {
+      summary += ''+
+        'Цепочки повторов: -\n\n'+ 
+        'Повторов всего: -\n\n'+ 
+        'Время обработки: -\n';
+    }
+    else {
+      summary += ''+
+        'Цепочки повторов: ' + stat.chains +'\n\n'+ 
+        'Повторов всего: ' + stat.duplicates +'\n\n'+ 
+        'Время обработки: ' + stat.time + 'мс\n';
+    }
+    ui.summary.value = summary;
+    ui.autoResize(ui.summary);
+  };
+  
+  ui.text.togglePlaceholder = function() {
+    if (ui.text.value === '') {
+      if (ui.text.dataset && ui.text.dataset.placeholder) {
+        ui.mock.innerHTML = ui.text.dataset.placeholder;
+      }
+    }
+    else {
+      ui.mock.innerHTML = ui.text.value;
+    }
+  };
+  ui.autoResize = function(elem) {
+    elem.style.overflowY = 'hidden';
+    elem.style.marginTop = elem.scrollHeight + 'px'; 
+    elem.style.minHeight = 0;
+    elem.style.minHeight = elem.scrollHeight + 'px'; 
+    elem.style.marginTop = 0;
+  };
+  ui.text.padLines = function() {
+    this.value = this.value.replace(/\n+/g, "\n\n");
+  };
+
+  ui.text.addEventListener('input', ui.viewUpdate);
+  //ui.text.addEventListener('keyup', ui.viewUpdate);
+  ui.text.addEventListener('mouseup', function(event) {
+    var text = ui.text.value;
+    if (text !== '' && typeof ui.text.selectionStart !== 'undefined') {
+      var wordsArray = wordMatrix.parseInputText(text.slice(0, ui.text.selectionStart));
+      var wordPos = wordsArray.length - 1;
+      var nodeList = ui.mock.querySelectorAll('span');
+      var node;
+      if (node = nodeList.item(wordPos)) {
+        if (ui.styles && node.className && window.getComputedStyle) {
+          var chainClass = node.className.match(/chain_[0-9_]+/); // класс цепочки повторов
+          var color = window.getComputedStyle(node).getPropertyValue('color');
+          color = color.replace(/rgb\(([0-9, ]+)\)/, 'rgba($1, 0.3)');
+          ui.styles.innerHTML = '.' + chainClass + '{ background:'+ color +'; }';
+        }
+
+      }
+    }
+  });
+  
+  
+  ui.submit.addEventListener('click', function(event) {
+    event.preventDefault();
+    ui.toggleState('loading');
+    ui.text.padLines();
+    setTimeout(function() {
+      var stat = {
+        chains: 0,
+        duplicates: 0,
+        time: (new Date()).getTime()
+      };
+      var text = ui.text.value;
+      if (text !== '') {
+        var distance = parseInt(ui.distance.value);
+        wordMatrix.build(text);
+        var duplicatesChains = wordMatrix.getRepetitions(distance);
+        var chainHighlightStyle = 0;
+        var chainClass = '';
+        ui.mock.innerHTML = text.replace(/([А-ЯЁа-яёA-Za-z]+)/g, "<span>$1</span>");
+        var nodeList = ui.mock.querySelectorAll('span');
+        var node; 
+        for(var r = 0; r < duplicatesChains.length; ++r) {
+          if (duplicatesChains[r].length === 0) { continue; }
+          ++chainHighlightStyle;
+          chainClass = 'chain_' + duplicatesChains[r].join('_'); // класс цепочки повторов
+          ++stat.chains;
+          for(var p = 0; p < duplicatesChains[r].length; ++p) {
+            if (node = nodeList.item(duplicatesChains[r][p])) {
+              ++stat.duplicates;
+              node.className = 'form-highlight ' + 
+                'form-highlight' + (chainHighlightStyle % 10) + ' ' +
+                chainClass;
+            }
+          }
+        }
+      }
+      stat.time = (new Date()).getTime() - stat.time;
+      ui.summary.update(stat);
+      ui.toggleState('idle');
+    }, 1);
+    
+  });
+
+  ui.delete.addEventListener('click', function(event) {
+    event.preventDefault();
+    ui.text.value = '';
+    ui.text.focus();
+    ui.viewUpdate(event);
+  });
+
+  ui.up.addEventListener('click', function(event) {
+    event.preventDefault();
+    window.scrollTo(0, 0);
+  });
+
+  ui.text.addEventListener('paste', function(event) {
+    setTimeout(function() {
+      ui.text.padLines();
+      ui.viewUpdate(event);
+    }, 1);
+  });
+
+  var resizeTimer = null;
+  window.addEventListener('resize', function(event) {
+    if (resizeTimer) { return null; }
+    resizeTimer = setTimeout(function() {
+      ui.viewUpdate(event);
+      resizeTimer = null;
+    }, 100);
+  });
+
+
+  ui.viewUpdate();
+  ui.toggleState('idle');
 });
 
 </script>
