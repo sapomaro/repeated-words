@@ -5,7 +5,8 @@
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="main.css">
-  <title>🔁 Поиск повторов слов v0.4.1</title>
+  <style type="text/css"></style>
+  <title>🔁 Поиск повторов слов v0.4.2</title>
 </head>
 <body lang="ru">
   <div class="container">
@@ -13,7 +14,7 @@
     <form name="repetitions">
       <table>
         <tr><td class="container-main">
-          <div class="form-fieldset">
+          <div class="form-areaset">
             <div id="mock" class="form-area form-mock"></div>
             <textarea name="text" class="form-area form-text" spellcheck="false"
               data-placeholder="Вставьте сюда текст..."></textarea>
@@ -25,12 +26,14 @@
               <b id="indicator" data-idle-value="⭾" data-loading-value="⌛"></b> 
               Найти повторы 
             </button>
-            <div>
+            <label>
               <input name="distance" class="form-field">&nbsp;
               <span class="form-comment">слов между повторами максимум</span>
-            </div>
+            </label>
             <button name="delete" class="form-button">⌦ Очистить</button>
             <button name="up" class="form-button"><b>⭱</b> Наверх</button>
+            <h2>Статистика:</h2>
+            <textarea name="summary" class="form-area form-summary" readonly="readonly"></textarea>
           </div>
         </td></tr>
       </table>

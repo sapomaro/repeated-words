@@ -5,7 +5,7 @@ window.addEventListener('load', function(event) {
   var wordFormsHandler = DuplicateWordsApp.FormsModule(dictionary);
   var wordMatrix = DuplicateWordsApp.FinderModule(wordFormsHandler);
 
-  var ui = document.forms.repetitions; // text, distance, delete, up
+  var ui = document.forms.repetitions; // text, distance, delete, up, summary
   ui.mock = document.querySelector('#mock');
   ui.indicator = document.querySelector('#indicator');
   ui.distance.value = 70; // расстояние между словами по умолчанию для поиска повторов
@@ -13,8 +13,9 @@ window.addEventListener('load', function(event) {
   ui.viewUpdate = function(event) {
     if (!event || event.type !== 'resize') {
       ui.text.togglePlaceholder();
+      ui.summary.update();
     }
-    ui.text.autoResize();
+    ui.autoResize(ui.text);
     ui.style.height = ui.text.scrollHeight;
   };
 
@@ -33,7 +34,25 @@ window.addEventListener('load', function(event) {
       ui.indicator.innerHTML = ui.indicator.dataset[state + 'Value'];
     }
   };
-
+  
+  ui.summary.update = function(stat) {
+    var summary = '';
+    if (!stat) {
+      summary += ''+
+        'Цепочки повторов: -\n\n'+ 
+        'Повторов всего: -\n\n'+ 
+        'Время обработки: -\n';
+    }
+    else {
+      summary += ''+
+        'Цепочки повторов: ' + stat.chains +'\n\n'+ 
+        'Повторов всего: ' + stat.duplicates +'\n\n'+ 
+        'Время обработки: ' + stat.time + 'мс\n';
+    }
+    ui.summary.value = summary;
+    ui.autoResize(ui.summary);
+  };
+  
   ui.text.togglePlaceholder = function() {
     if (ui.text.value === '') {
       if (ui.text.dataset && ui.text.dataset.placeholder) {
@@ -44,45 +63,77 @@ window.addEventListener('load', function(event) {
       ui.mock.innerHTML = ui.text.value;
     }
   };
-  ui.text.autoResize = function() {
-    this.style.overflowY = 'hidden';
-    this.style.marginTop = this.scrollHeight + 'px'; 
-    this.style.minHeight = 0;
-    this.style.minHeight = this.scrollHeight + 'px'; 
-    this.style.marginTop = 0;
+  ui.autoResize = function(elem) {
+    elem.style.overflowY = 'hidden';
+    elem.style.marginTop = elem.scrollHeight + 'px'; 
+    elem.style.minHeight = 0;
+    elem.style.minHeight = elem.scrollHeight + 'px'; 
+    elem.style.marginTop = 0;
   };
   ui.text.padLines = function() {
     this.value = this.value.replace(/\n+/g, "\n\n");
   };
 
+  ui.text.addEventListener('input', ui.viewUpdate);
+  //ui.text.addEventListener('keyup', ui.viewUpdate);
+  ui.text.addEventListener('mouseup', function(event) {
+    var text = ui.text.value;
+    if (text !== '' && typeof ui.text.selectionStart !== 'undefined') {
+      var wordsArray = wordMatrix.parseInputText(text.slice(0, ui.text.selectionStart));
+      var wordPos = wordsArray.length - 1;
+      var nodeList = ui.mock.querySelectorAll('span');
+      var node;
+      var style = document.querySelector('style');
+      if (node = nodeList.item(wordPos)) {
+        if (style && node.className && window.getComputedStyle) {
+          var chainClass = node.className.match(/chain_[0-9_]+/); // класс цепочки повторов
+          var color = window.getComputedStyle(node).getPropertyValue('color');
+          color = color.replace(/rgb\(([0-9, ]+)\)/, 'rgba($1, 0.3)');
+          style.innerHTML = '.' + chainClass + '{ background:'+ color +'; }';
+        }
+
+      }
+    }
+  });
+  
+  
   ui.submit.addEventListener('click', function(event) {
     event.preventDefault();
     ui.toggleState('loading');
     ui.text.padLines();
     setTimeout(function() {
+      var stat = {
+        chains: 0,
+        duplicates: 0,
+        time: (new Date()).getTime()
+      };
       var text = ui.text.value;
-      if (text !== '') { 
+      if (text !== '') {
         var distance = parseInt(ui.distance.value);
-        var exceptions = 'из, за, на, не, ни, по, бы, до, для, под'; // повторы, которые могут не учитываться
-        wordMatrix.build(text, exceptions);
-        var repetitions = wordMatrix.getRepetitions(distance);
+        wordMatrix.build(text);
+        var duplicatesChains = wordMatrix.getRepetitions(distance);
+        var chainHighlightStyle = 0;
+        var chainClass = '';
         ui.mock.innerHTML = text.replace(/([А-ЯЁа-яёA-Za-z]+)/g, "<span>$1</span>");
         var nodeList = ui.mock.querySelectorAll('span');
-        var highlightStyle = 0;
-        var chainId = '';
-        for(var r = 0; r < repetitions.length; ++r) {
-          if (repetitions[r].length === 0) { continue; }
-          ++highlightStyle;
-          chainId = 'chain_' + repetitions[r].join('_'); // цепочка повторов
-          for(var p = 0; p < repetitions[r].length; ++p) {
-            if (nodeList.item(repetitions[r][p])) {
-              nodeList.item(repetitions[r][p]).className = 'form-highlight ' + 
-                'form-highlight' + (highlightStyle % 10) + ' ' +
-                chainId;
+        var node; 
+        for(var r = 0; r < duplicatesChains.length; ++r) {
+          if (duplicatesChains[r].length === 0) { continue; }
+          ++chainHighlightStyle;
+          chainClass = 'chain_' + duplicatesChains[r].join('_'); // класс цепочки повторов
+          ++stat.chains;
+          for(var p = 0; p < duplicatesChains[r].length; ++p) {
+            if (node = nodeList.item(duplicatesChains[r][p])) {
+              ++stat.duplicates;
+              node.className = 'form-highlight ' + 
+                'form-highlight' + (chainHighlightStyle % 10) + ' ' +
+                chainClass;
             }
           }
         }
       }
+      stat.time = (new Date()).getTime() - stat.time;
+      ui.summary.update(stat);
       ui.toggleState('idle');
     }, 1);
     
@@ -116,8 +167,6 @@ window.addEventListener('load', function(event) {
     }, 100);
   });
 
-  ui.text.addEventListener('input', ui.viewUpdate);
-  //ui.text.addEventListener('keyup', ui.viewUpdate);
 
   ui.viewUpdate();
   ui.toggleState('idle');
