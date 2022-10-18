@@ -96,7 +96,9 @@ window.addEventListener('load', function(event) {
       }
     }
   });
-  
+  ui.text.parentNode.addEventListener('click', function(event) {
+    ui.text.focus();
+  });
   
   ui.submit.addEventListener('click', function(event) {
     event.preventDefault();
