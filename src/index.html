@@ -1,52 +1,52 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-  <meta http-equiv="cache-control" content="no-cache">
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="main.css">
-  <style type="text/css"></style>
-  <title>🔁 Поиск повторов слов v0.4.4</title>
-</head>
-<body lang="ru">
-  <div class="container">
-    <h1>Поиск повторов слов</h1>
-    <form name="repetitions">
-      <table>
-        <tr><td class="container-main">
-          <div class="form-areaset">
-            <div id="mock" class="form-area form-mock"></div>
-            <textarea name="text" class="form-area form-text" spellcheck="false"
-              data-placeholder="Вставьте сюда текст..."></textarea>
-          </div>
-        </td>
-        <td class="container-controls">
-          <div class="sticky-controls">
-            <button name="submit" class="form-button">
-              <b id="indicator" data-idle-value="⭾" data-loading-value="⌛"></b> 
-              Найти повторы 
-            </button>
-            <label>
-              <input name="distance" class="form-field">&nbsp;
-              <span class="form-comment">слов между повторами максимум</span>
-            </label>
-            <button name="delete" class="form-button">⌦ Очистить</button>
-            <button name="up" class="form-button"><b>⭱</b> Наверх</button>
-            <h2>Статистика:</h2>
-            <textarea name="summary" class="form-area form-summary" readonly="readonly"></textarea>
-          </div>
-        </td></tr>
-      </table>
-    </form>
-    <br><br><br>
-  </div>
-<script type="text/javascript">
-  window.DuplicateWordsApp = {}; 
-</script>
-<script src='duplicate-finder.js'></script>
-<script src='duplicate-forms.js'></script>
-<script src='duplicate-dictionary.js'></script>
-<script src='instantiation.js'></script>
-<!--<script src='tests.js'></script>-->
-</body>
+  <head>
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="main.css">
+    <style type="text/css"></style>
+    <title>🔁 Поиск повторов слов v0.4.5</title>
+  </head>
+  <body lang="ru">
+    <div class="container">
+      <h1>Поиск повторов слов</h1>
+      <form name="repetitions">
+        <table>
+          <tr><td class="container-main">
+            <div class="form-areaset">
+              <div id="mock" class="form-area form-mock"></div>
+              <textarea name="text" class="form-area form-text" spellcheck="false"
+                data-placeholder="Вставьте сюда текст..."></textarea>
+            </div>
+          </td>
+          <td class="container-controls">
+            <div class="sticky-controls">
+              <button name="submit" class="form-button">
+                <b id="indicator" data-idle-value="⭾" data-loading-value="⌛"></b> 
+                Найти повторы 
+              </button>
+              <label>
+                <input name="distance" class="form-field">&nbsp;
+                <span class="form-comment">слов между повторами максимум</span>
+              </label>
+              <button name="clear" class="form-button">⌦ Очистить</button>
+              <button name="up" class="form-button"><b>⭱</b> Наверх</button>
+              <h2>Статистика:</h2>
+              <textarea name="summary" class="form-area form-summary" readonly="readonly"></textarea>
+            </div>
+          </td></tr>
+        </table>
+      </form>
+      <br><br><br>
+    </div>
+  <script type="text/javascript">
+    window.DuplicateWordsApp = {}; 
+  </script>
+  <script src='duplicate-finder.js'></script>
+  <script src='duplicate-forms.js'></script>
+  <script src='duplicate-dictionary.js'></script>
+  <script src='instantiation.js'></script>
+  <script src='tests.js'></script>
+  </body>
 </html>

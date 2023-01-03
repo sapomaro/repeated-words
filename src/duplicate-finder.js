@@ -1,47 +1,45 @@
-window.DuplicateWordsApp.FinderModule = function(wordFormsHandler) {
+window.DuplicateWordsApp.DuplicatesFinderModule = function(wordFormsHandler) {
   "use strict";
 
   var wordMatrix = {};
-  
+
   wordMatrix.parseInputText = function(text) { // преобразует текст в упорядоченный массив
     return text.replace('ё', 'е')
       .split(/[^А-ЯЁа-яёA-Za-z]+/)
       .filter(String);
   };
-    
+
   wordMatrix.build = function(text) {
     // создаёт матрицу возможных словоформ (слово целиком, корень слова, слово без приставки, слово без суффикса)
     var wordsArray = this.parseInputText(text);
     var word = '';
     var wordForms = [];
     this.matrix = {};
-    
+
     for (var pos = 0; pos < wordsArray.length; ++pos) {
       pos = parseInt(pos);
       word = wordsArray[pos].toLowerCase();
-      
+
       if (!word) { continue; }
       if (word.length < 2) { continue; }
 
       wordForms = wordFormsHandler(word); // word, wordRoot, wordRootSuffixed, wordRootPrefixed
-      
+
       for (var f = 0; f < wordForms.length; ++f) {
         if (f > 0 && word === wordForms[f]) { continue; }
-        
+
         if ('undefined' === typeof this.matrix[wordForms[f]]) {
           this.matrix[wordForms[f]] = [pos];
 
         } else if (this.matrix[wordForms[f]].indexOf(pos) === -1) {
           this.matrix[wordForms[f]].push(pos);
         }
-
       }
-
     }
-    
+
     this.compareEach();
   };
-  
+
   wordMatrix.compareEach = function() {
     // проходит по всей матрице словоформ (для слов длиной не менее 7 букв)
     // для применения дополнительных алгоритмов сравнения
@@ -53,9 +51,8 @@ window.DuplicateWordsApp.FinderModule = function(wordFormsHandler) {
         if (word2.length < 7) { continue; }
         if (this.matrix.hasOwnProperty(word2) === false) { continue; }
         if (this.matrix[word] === this.matrix[word2]) { continue; }
-        
+
         this.compareLastLetter(word, word2);
-        
       }
     }
   };
@@ -81,7 +78,7 @@ window.DuplicateWordsApp.FinderModule = function(wordFormsHandler) {
     if (!searchDistance) { searchDistance = 50; }
     var repetitions = [];
     var pairs = [];
-    
+
     for (var word in this.matrix) {
       if (this.matrix.hasOwnProperty(word) === false) { continue; }
       if (this.matrix[word].length < 2) { continue; } // пролистываем словоформы, у которых нет совпадений
@@ -104,11 +101,10 @@ window.DuplicateWordsApp.FinderModule = function(wordFormsHandler) {
         pairs = [];
       }
     }
-    
+
     return wordMatrix.reduceRepetitions(repetitions, searchDistance);
-    
   };
-  
+
   wordMatrix.reduceRepetitions = function(repetitions, searchDistance) {
     // соединяет повторы в цепочки, чтобы они отображались одним цветом
     repetitions = repetitions.sort(function(a, b) { return a[0] - b[0]; });
@@ -131,6 +127,6 @@ window.DuplicateWordsApp.FinderModule = function(wordFormsHandler) {
     }
     return repetitions;
   };
-  
+
   return wordMatrix;
 };

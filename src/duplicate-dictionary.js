@@ -1,20 +1,21 @@
 window.DuplicateWordsApp.DictionaryModule = function(lang) {
   "use strict";
-  
+
   if (lang !== 'ru') {
     return null;
   }
 
   var dict = {};
-  
-  var parseMorphemes = function(line) { // преобразует части слов в упорядоченный массив
-    return line.replace(/ё/g, 'е')
+
+  function parseMorphemes(line) { // преобразует части слов в упорядоченный массив
+    return line.toLowerCase()
+      .replace(/ё/g, 'е')
       .replace(/^[^а-яё]+/, '')
       .replace(/[^а-яё]+$/, '')
       .split(/[^а-яё]+/)
       .sort(function(a, b) { return a.length - b.length; });
-  };
-  
+  }
+
   /*  СПОРНЫЕ СЛУЧАИ: 
       поле = полет <> летать (!!!)
       имеющий = одноименный <> имя (!!!)
@@ -37,12 +38,12 @@ window.DuplicateWordsApp.DictionaryModule = function(lang) {
       распад = подпадает (?)
       состояние = противостояние (?)
   */
-  
+
   // повторы, которые могут не учитываться
   dict.exceptions = 'из, за, на, не, ни, во, по, бы, до, от, для, под, над, гг'; 
-  
+
   dict.immutableRoots = 'назад, никто, пока, ради, там, так, как, кто, что, раз, вне, при, ли';
-  
+
   dict.unbreakableRoots = parseMorphemes( // проблемные корни, которые могут быть неверно разбиты
     'ваш, век, вер, вес, вид, вод, вред, вечер, власт, вопрос, войн, втор, '+
     'восто, возраж, восстанов, газон, '+
