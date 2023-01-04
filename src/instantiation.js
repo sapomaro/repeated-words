@@ -1,8 +1,8 @@
 window.addEventListener('load', function() {
   "use strict";
 
-  var dictionary = DuplicateWordsApp.DictionaryModule('ru');
-  var wordFormsHandler = DuplicateWordsApp.WordFormsModule(dictionary);
+  var dict = DuplicateWordsApp.DictionaryModule('ru');
+  var wordFormsHandler = DuplicateWordsApp.WordFormsModule(dict);
   var wordMatrix = DuplicateWordsApp.DuplicatesFinderModule(wordFormsHandler);
 
   var ui = document.forms.repetitions; // text, distance, clear, up, summary
@@ -108,7 +108,7 @@ window.addEventListener('load', function() {
       var stat = {
         chains: 0,
         duplicates: 0,
-        time: (new Date()).getTime()
+        time: Date.now()
       };
       var text = ui.text.value;
       if (text !== '') {
@@ -135,7 +135,7 @@ window.addEventListener('load', function() {
           }
         }
       }
-      stat.time = (new Date()).getTime() - stat.time;
+      stat.time = Date.now() - stat.time;
       ui.summary.update(stat);
       ui.toggleState('idle');
     }, 1);
