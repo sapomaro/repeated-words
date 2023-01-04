@@ -3,11 +3,12 @@ window.addEventListener('load', function() {
 
   function test(comment, callback) {
     try {
+      var timestamp = Date.now();
       callback();
-      console.log('✔️ Test passed:', comment);
+      console.log('✔️ Test passed:', comment, '(' + (Date.now() - timestamp) + 'ms)');
     }
     catch (error) {
-      console.warn('❌ Test failed:', comment);
+      console.warn('❌ Test failed:', comment, '(' + (Date.now() - timestamp) + 'ms)');
       console.debug(error);
     }
   }
@@ -18,7 +19,7 @@ window.addEventListener('load', function() {
         if ((reversed && assertion(assertValue)) || !assertion(assertValue)) {
           var values = '';
           if (typeof expectValue !== 'undefined' && typeof assertValue !== 'undefined') {
-            values = expectValue + ' <> ' + assertValue;
+            values = JSON.stringify(expectValue) + ' <> ' + JSON.stringify(assertValue);
           }
           throw new Error(assertion.name +' '+ values); 
         }
@@ -32,15 +33,18 @@ window.addEventListener('load', function() {
     var toBe = function(resultValue) { return expectValue === resultValue; };
     var toBeTruthy = function() { return !!expectValue === true; };
     var toBeFalsy = function() { return !expectValue === true; };
+    var toEqual = function(resultValue) { return JSON.stringify(expectValue) === JSON.stringify(resultValue); };
 
     return {
       toBe: assert(toBe),
       toBeTruthy: assert(toBeTruthy),
       toBeFalsy: assert(toBeFalsy),
+      toEqual: assert(toEqual),
       not: {
         toBe: assertNot(toBe),
         toBeTruthy: assertNot(toBeTruthy),
-        toBeFalsy: assertNot(toBeFalsy)
+        toBeFalsy: assertNot(toBeFalsy),
+        toEqual: assertNot(toEqual)
       }
     };
   }
@@ -52,6 +56,11 @@ window.addEventListener('load', function() {
     expect(true).not.toBe(false);
     expect(false).toBeFalsy();
     expect(false).not.toBeTruthy();
+
+    expect([1, 2, 3]).not.toBe([1, 2, 3]);
+    expect([1, 2, 3]).toEqual([1, 2, 3]);
+    expect({ test: 123 }).not.toBe({ test: 123 });
+    expect({ test: 123 }).toEqual({ test: 123 });
   });
 
   test('app should load all modules', function() {
@@ -61,8 +70,10 @@ window.addEventListener('load', function() {
     expect(typeof DuplicateWordsApp.DuplicatesFinderModule).toBe('function');
   });
 
+  var dict, wordFormsHandler, wordMatrix;
+
   test('dictionary should be set with RU lang', function() {
-    var dict = DuplicateWordsApp.DictionaryModule('ru');
+    dict = DuplicateWordsApp.DictionaryModule('ru');
 
     expect(typeof dict.exceptions).toBe('string');
 
@@ -83,5 +94,38 @@ window.addEventListener('load', function() {
     expect(dict.endings instanceof Array).toBe(true);
     expect(dict.endings.length > 100).toBe(true);
     expect(dict.endings[0].length).toBe(1);
+  });
+
+  test('word forms module should generate word forms', function() {
+    wordFormsHandler = DuplicateWordsApp.WordFormsModule(dict);
+
+    expect(typeof wordFormsHandler).toBe('function');
+
+    // для исключений не должно генерироровать словоформы
+    expect(wordFormsHandler('не')).toEqual([]);
+    expect(wordFormsHandler('для')).toEqual([]);
+
+    // для неизменяемых слов и слов, которые состоят только из корня, формы должны быть одинаковые
+    expect(wordFormsHandler('никто')).toEqual(['никто', 'никто', 'никто', 'никто']);
+    expect(wordFormsHandler('доклад')).toEqual(['доклад', 'доклад', 'доклад', 'доклад']);
+
+    // для обычных слов должно выдавать четыре словоформы: исходная, корень, корень с приставкой, корень с одним суффиксом (если их несколько)
+    expect(wordFormsHandler('подоходный')).toEqual(['подоходный', 'доход', 'подоход', 'доход']);
+    expect(wordFormsHandler('прицелехонький')).toEqual(['прицелехонький', 'цел', 'прицел', 'цел']);
+  });
+
+  test('repeated word finder should return repetition chains', function() {
+    wordMatrix = DuplicateWordsApp.DuplicatesFinderModule(wordFormsHandler);
+
+    expect(typeof wordMatrix).toBe('object');
+
+    expect(wordMatrix.parseInputText('-Это рандомный текст!!11Всё.')).toEqual(['это', 'рандомный', 'текст', 'все']);
+
+    expect(wordMatrix.build('Текст с повторяющимися повторами повторов в текстовом тексте.'))
+      .toEqual({ 'текст': [0, 6, 7], 'повторяющимися': [2], 'повтор': [2, 3, 4], 'повторами': [3], 'повторов': [4], 'текстовом': [6], 'тексте': [7] });
+
+    expect(wordMatrix.getRepetitions(50 /* seach distance */)).toEqual([[0, 6, 7], [2, 3, 4]]);
+
+    expect(wordMatrix.getRepetitions(5)).toEqual([[2, 3, 4], [6, 7]]);
   });
 });
