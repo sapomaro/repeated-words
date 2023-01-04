@@ -72,8 +72,10 @@ window.addEventListener('load', function() {
     elem.style.minHeight = elem.scrollHeight + 'px'; 
     elem.style.marginTop = 0;
   };
-  ui.text.padLines = function() {
-    this.value = this.value.replace(/\n+/g, "\n\n");
+  ui.text.format = function() {
+    this.value = this.value
+      .replace(/\u0301/g, '') // удаляет ударение
+      .replace(/\n+/g, "\n\n");
   };
 
   ui.text.addEventListener('input', ui.viewUpdate);
@@ -103,7 +105,7 @@ window.addEventListener('load', function() {
   ui.submit.addEventListener('click', function(event) {
     event.preventDefault();
     ui.toggleState('loading');
-    ui.text.padLines();
+    ui.text.format();
     setTimeout(function() {
       var stat = {
         chains: 0,
@@ -155,7 +157,7 @@ window.addEventListener('load', function() {
 
   ui.text.addEventListener('paste', function(event) {
     setTimeout(function() {
-      ui.text.padLines();
+      ui.text.format();
       ui.viewUpdate(event);
     }, 1);
   });
