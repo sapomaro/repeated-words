@@ -17,9 +17,9 @@ window.DuplicateWordsApp.WordFormsModule = function(dict) {
 
     for (var r = dict.unbreakableRoots.length - 1; r >= 0; --r) { // проверка на наличие проблемного корня
       if (word.length < dict.unbreakableRoots[r].length) { 
-        continue; 
+        continue;
       }
-      if (word.indexOf(dict.unbreakableRoots[r]) !== -1){
+      if (word.indexOf(dict.unbreakableRoots[r]) !== -1) {
         wordRootMatched = dict.unbreakableRoots[r];
         break;
       }
@@ -33,6 +33,11 @@ window.DuplicateWordsApp.WordFormsModule = function(dict) {
       [dict.suffixes, 3],
       [dict.prefixes, -3]
     ];
+
+    // если слово длинное, нужно дополнительное отсечение суффиксов
+    if (word.length > 12) {
+      parseSequence.splice(2, 0, [dict.suffixes, 3]);
+    }
 
     for (var p = 0; p < parseSequence.length; ++p) { // отсечение аффиксов от слова
       var affixes = parseSequence[p][0]; 
