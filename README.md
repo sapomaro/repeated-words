@@ -1,4 +1,4 @@
-# Поиск повторов слов / Repeated Words Finder for Russian
+# Поиск повторов слов
 
 ## Поиск повторов однокоренных слов в текстах на русском языке
 
@@ -18,6 +18,6 @@
 
 ---
 
-## Стек технологий / Technology stack
+## Стек технологий
 
 JavaScript ES5 & HTML4, legacy-friendly, zero dependency, no backend, self-written tests
