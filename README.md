@@ -2,7 +2,7 @@
 
 ## Поиск повторов однокоренных слов в текстах на русском языке
 
-Ссылка на рабочую версию: https://sapomaro.github.io/repeatedwords
+Ссылка на рабочую версию: https://sapomaro.github.io/repeated-words
 
 ![App overview](docs/screenshot1.png)
 
