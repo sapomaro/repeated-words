@@ -20,4 +20,4 @@
 
 ## Стек технологий
 
-JavaScript ES5 & HTML4, legacy-friendly, zero dependency, no backend, self-written tests
+JavaScript ES5, legacy-friendly, zero dependency, no backend, self-written tests
