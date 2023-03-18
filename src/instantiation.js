@@ -80,7 +80,7 @@ window.addEventListener('load', function() {
 
   ui.text.addEventListener('input', ui.viewUpdate);
   //ui.text.addEventListener('keyup', ui.viewUpdate);
-  ui.text.addEventListener('mouseup', function(event) {
+  ui.text.addEventListener('mouseup', function() {
     var text = ui.text.value;
     if (text !== '' && typeof ui.text.selectionStart !== 'undefined') {
       var wordsArray = wordMatrix.parseInputText(text.slice(0, ui.text.selectionStart));
@@ -94,11 +94,10 @@ window.addEventListener('load', function() {
           color = color.replace(/rgb\(([0-9, ]+)\)/, 'rgba($1, 0.3)');
           ui.styles.innerHTML = '.' + chainClass + '{ background:'+ color +'; }';
         }
-
       }
     }
   });
-  ui.text.parentNode.addEventListener('click', function(event) {
+  ui.text.parentNode.addEventListener('click', function() {
     ui.text.focus();
   });
 
