@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="main.css">
     <style type="text/css"></style>
-    <title>🔁 Поиск повторов слов v0.4.5</title>
+    <title>🔁 Поиск повторов слов v0.4.6</title>
   </head>
   <body lang="ru">
     <div class="container">
@@ -30,7 +30,8 @@
                 <input name="distance" class="form-field">&nbsp;
                 <span class="form-comment">слов между повторами максимум</span>
               </label>
-              <button name="clear" class="form-button">⌦ Очистить</button>
+              <button name="clear" class="form-button"
+                data-erase-value="⌦ Очистить" data-restore-value="↺ Вернуть"></button>
               <button name="up" class="form-button"><b>⭱</b> Наверх</button>
               <h2>Статистика:</h2>
               <textarea name="summary" class="form-area form-summary" readonly="readonly"></textarea>

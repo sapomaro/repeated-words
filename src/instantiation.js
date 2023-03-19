@@ -13,8 +13,9 @@ window.addEventListener('load', function() {
 
   ui.viewUpdate = function(event) {
     if (!event || event.type !== 'resize') {
-      ui.text.togglePlaceholder();
+      ui.text.update();
       ui.summary.update();
+      ui.clear.update();
       ui.styles.innerHTML = '';
     }
     ui.autoResize(ui.text);
@@ -32,6 +33,10 @@ window.addEventListener('load', function() {
       ui.distance.disabled = false;
       ui.clear.disabled = false;
     }
+    ui.indicator.update(state);
+  };
+
+  ui.indicator.update = function(state) {
     if (ui.indicator.dataset && ui.indicator.dataset[state + 'Value']) {
       ui.indicator.innerHTML = ui.indicator.dataset[state + 'Value'];
     }
@@ -55,7 +60,7 @@ window.addEventListener('load', function() {
     ui.autoResize(ui.summary);
   };
 
-  ui.text.togglePlaceholder = function() {
+  ui.text.update = function() {
     if (ui.text.value === '') {
       if (ui.text.dataset && ui.text.dataset.placeholder) {
         ui.mock.innerHTML = ui.text.dataset.placeholder;
@@ -75,7 +80,7 @@ window.addEventListener('load', function() {
   ui.text.format = function() {
     this.value = this.value
       .replace(/\u0301/g, '') // удаляет ударение
-      .replace(/\n+/g, "\n\n");
+      .replace(/\n+/g, '\n\n');
   };
 
   ui.text.addEventListener('input', ui.viewUpdate);
@@ -142,9 +147,29 @@ window.addEventListener('load', function() {
     }, 1);
   });
 
+  ui.clear.update = function() {
+    var state = 'erase';
+    if (ui.text.cache) {
+      state = 'restore';
+    }
+    if (ui.clear.dataset && ui.clear.dataset[state + 'Value']) {
+      ui.clear.innerHTML = ui.clear.dataset[state + 'Value'];
+    }
+  };
+  ui.text.addEventListener('input', function() {
+    ui.text.cache = '';
+    ui.clear.update();
+  });
   ui.clear.addEventListener('click', function(event) {
     event.preventDefault();
-    ui.text.value = '';
+    if (ui.text.cache) {
+      ui.text.value = ui.text.cache;
+      ui.text.cache = '';
+    }
+    else {
+      ui.text.cache = ui.text.value;
+      ui.text.value = '';
+    }
     ui.text.focus();
     ui.viewUpdate(event);
   });
