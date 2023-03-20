@@ -149,7 +149,7 @@ window.addEventListener('load', function() {
 
   ui.clear.update = function() {
     var state = 'erase';
-    if (ui.text.cache) {
+    if (ui.text.cachedContents) {
       state = 'restore';
     }
     if (ui.clear.dataset && ui.clear.dataset[state + 'Value']) {
@@ -157,17 +157,20 @@ window.addEventListener('load', function() {
     }
   };
   ui.text.addEventListener('input', function() {
-    ui.text.cache = '';
+    ui.text.cachedContents = '';
     ui.clear.update();
   });
   ui.clear.addEventListener('click', function(event) {
     event.preventDefault();
-    if (ui.text.cache) {
-      ui.text.value = ui.text.cache;
-      ui.text.cache = '';
+    if (ui.text.cachedContents) {
+      ui.text.value = ui.text.cachedContents;
+      ui.text.setSelectionRange(ui.text.cachedSelectionStart, ui.text.cachedSelectionEnd);
+      ui.text.cachedContents = '';
     }
     else {
-      ui.text.cache = ui.text.value;
+      ui.text.cachedContents = ui.text.value;
+      ui.text.cachedSelectionStart = ui.text.selectionStart || 0;
+      ui.text.cachedSelectionEnd = ui.text.selectionEnd || 0;
       ui.text.value = '';
     }
     ui.text.focus();
