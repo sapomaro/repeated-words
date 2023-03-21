@@ -105,28 +105,45 @@ window.addEventListener('load', function() {
     expect(wordFormsHandler('не')).toEqual([]);
     expect(wordFormsHandler('для')).toEqual([]);
 
-    // для неизменяемых слов и слов, которые состоят только из корня, формы должны быть одинаковые
-    expect(wordFormsHandler('никто')).toEqual(['никто', 'никто', 'никто', 'никто']);
-    expect(wordFormsHandler('доклад')).toEqual(['доклад', 'доклад', 'доклад', 'доклад']);
+    // для неизменяемых слов и слов, которые состоят только из корня, форма должна быть одна
+    expect(wordFormsHandler('никто')).toEqual(['никто']);
+    expect(wordFormsHandler('доклад')).toEqual(['доклад']);
 
     // для обычных слов должно выдавать несколько словоформ: исходная, корень, корень с приставкой, корень с суффиксами (если их несколько)
     expect(wordFormsHandler('подоходный')).toEqual(['подоходный', 'подоходн', 'подоход', 'доход', 'доход']);
     expect(wordFormsHandler('прицелехонький')).toEqual(['прицелехонький', 'прицелехоньк', 'прицел', 'цел', 'цел']);
   });
 
-  test('repeated word finder should return repetition chains', function() {
+  test('repeated word finder should parse text', function() {
     wordMatrix = DuplicateWordsApp.DuplicatesFinderModule(wordFormsHandler);
 
     expect(typeof wordMatrix).toBe('object');
 
-    expect(wordMatrix.parseInputText('-Это рандомный текст!!11Всё.')).toEqual(['это', 'рандомный', 'текст', 'все']);
+    expect(wordMatrix.parseInputText('-Это рандомный текст!!11Всё.'))
+      .toEqual(['это', 'рандомный', 'текст', 'все']);
+  });
 
-    expect(wordMatrix.build('Текст с повторяющимися повторами повторов в текстовом тексте.'))
-      .toEqual({'текст':[0,6,7],'повторяющимися':[2],'повторяющ':[2],'повтор':[2,3,4],'повторами':[3],'повторов':[4],'текстовом':[6],'текстов':[6],'тексте':[7]});
+  test('repeated word finder should return repetition chains', function() {
+    /*                  0   1       2            3        4     5     6       7    */
+    wordMatrix.build('Текст с повторяющимися повторами повторов в текстовом тексте.');
 
     expect(wordMatrix.getRepetitions(50 /* search distance */)).toEqual([[0, 6, 7], [2, 3, 4]]);
 
     expect(wordMatrix.getRepetitions(5 /* search distance */)).toEqual([[2, 3, 4], [6, 7]]);
+  });
+
+  test('repeated word finder should return correct repetition chains in difficult cases', function() {
+    /*                 0    1      2       3     4      5        6    */
+    wordMatrix.build('вид видный видеть видение идея идейный идеология');
+
+    expect(wordMatrix.getRepetitions(50 /* search distance */)).toEqual([[0, 1, 2, 3], [4, 5, 6]]);
+  });
+
+  test('repeated word finder should detect words with consonant alternation', function() {
+    /*                   0     1        2           3      */
+    wordMatrix.build('снежный снег опровергать опровержение');
+
+    expect(wordMatrix.getRepetitions(50)).toEqual([[0, 1], [2, 3], null]);
   });
 
   test('repeated word finder should pass snapshot test', function() {
@@ -144,92 +161,92 @@ window.addEventListener('load', function() {
 
     var snapshotResult = [
       [0,30,39,43,44,53,57,59,60,79,123,127],
-      [],
-      [],
-      [],
-      [],
+      null,
+      null,
+      null,
+      null,
       [4,9,15,20,70,74,76,89,97,104,112,149,163,177,189,201,231,238,245,248,251,257,264],
-      [],
+      null,
       [7,11,33,42,49],
-      [],
-      [],
+      null,
+      null,
       [8,61],
-      [],
+      null,
       [14,73],
-      [],
+      null,
       [16,75],
       [19,37],
       [22,48],
-      [],
-      [],
-      [],
-      [],
-      [],
+      null,
+      null,
+      null,
+      null,
+      null,
       [64,65],
       [66,88,103],
-      [],
+      null,
       [82,84,129],
-      [],
-      [],
-      [],
+      null,
+      null,
+      null,
       [86,133,140,159,165,169],
-      [],
+      null,
       [87,93,134,156,185],
-      [],
-      [],
-      [],
+      null,
+      null,
+      null,
       [100,150],
       [102,109],
       [132,148,187],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
       [136,142],
       [138,158],
-      [],
-      [],
-      [],
-      [],
+      null,
+      null,
+      null,
+      null,
       [147,176],
       [152,178,190],
-      [],
-      [],
+      null,
+      null,
       [162,168],
-      [],
-      [],
+      null,
+      null,
       [202,218],
-      [],
-      [],
-      [],
-      [],
+      null,
+      null,
+      null,
+      null,
       [204,225],
       [205,214,223,234,239],
-      [],
-      [],
-      [],
-      [],
+      null,
+      null,
+      null,
+      null,
       [219,226],
-      [],
-      [],
-      [],
+      null,
+      null,
+      null,
       [220,227],
       [221,228],
-      [],
+      null,
       [230,235],
-      [],
-      [],
-      [],
+      null,
+      null,
+      null,
       [236,256],
       [247,258],
-      [],
+      null,
       [252,261],
-      [],
-      [],
-      []
+      null,
+      null,
+      null
     ];
 
     wordMatrix.build(snapshotText);

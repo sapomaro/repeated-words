@@ -109,22 +109,24 @@ window.DuplicateWordsApp.DuplicatesFinderModule = function(wordFormsHandler) {
   };
 
   wordMatrix.reduceRepetitions = function(repetitions, searchDistance) {
+    var intersections = [];
     // соединяет повторы в цепочки, чтобы они отображались одним цветом
     repetitions = repetitions.sort(function(a, b) { return a[0] - b[0]; });
     for (var r = 0; r < repetitions.length; ++r) {
-      if (repetitions[r].length === 0) { continue; }
+      if (repetitions[r] === null) { continue; }
       for (var rr = r + 1; rr < repetitions.length; ++rr) {
+        if (repetitions[rr] === null) { continue; }
         if ((repetitions[rr][0] - repetitions[r][repetitions[r].length - 1]) > searchDistance) {
           break; // не листает дальше заданного расстояния между словами
         }
-        var intersections = repetitions[r].filter(function(item) {
+        intersections = repetitions[r].filter(function(item) {
           return (repetitions[rr].indexOf(item) !== -1); // сравнение двух цепочек
-        }); 
+        });
         if (intersections.length > 0) {
           repetitions[r] = repetitions[r].concat(repetitions[rr].filter(function(item) {
             return (repetitions[r].indexOf(item) < 0);
           })).sort(function(a, b) { return a - b; });
-          repetitions[rr] = [];
+          repetitions[rr] = null;
         }
       }
     }

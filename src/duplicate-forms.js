@@ -1,39 +1,60 @@
 window.DuplicateWordsApp.WordFormsModule = function(dict) {
   "use strict";
 
-  var wordFormsHandler = function(word) {
-    if (dict.exceptions.indexOf(word) !== -1) {
-      return [];
-    }
+  // выводит проблемные корни
+  var getUnbreakableRoots = function(word) {
+    var unbreakableWordRoots = [];
+    var unbreakableRootMaxLength = 0;
 
-    var wordForms = [word];
-    var wordRoot = word; // корень без аффиксов
-    var wordRootPrefixed = word; // корень с приставкой (для расширенного сопоставления)
-    var wordRootSuffixed = word; // корень с суффиксом (для расширенного сопоставления)
-    var wordRootAlt = word; // альтернативная форма корня (при чередовании согласных)
-    var wordRootMatched = []; // список содержащихся проблемных корней
-
-    var hasWordRootMatched = function(wordChunk) {
-      for (var i = 0; i < wordRootMatched.length; ++i) {
-        if (wordChunk.indexOf(wordRootMatched[i]) !== -1) {
-          return true;
-        }
-      }
-      return false;
-    };
-
-    if (dict.immutableRoots.indexOf(wordRoot) !== -1 || dict.unbreakableRoots.indexOf(wordRoot) !== -1) { 
-      return [word, wordRoot, wordRootPrefixed, wordRootSuffixed]; 
-    }
-
-    for (var r = dict.unbreakableRoots.length - 1; r >= 0; --r) { // проверка на наличие проблемного корня
+    for (var r = dict.unbreakableRoots.length - 1; r >= 0; --r) {
       if (word.length < dict.unbreakableRoots[r].length) { 
         continue;
       }
       if (word.indexOf(dict.unbreakableRoots[r]) !== -1) {
-        wordRootMatched.push(dict.unbreakableRoots[r]);
+        if (unbreakableRootMaxLength < dict.unbreakableRoots[r].length) {
+          unbreakableRootMaxLength = dict.unbreakableRoots[r].length;
+        }
+        unbreakableWordRoots.push(dict.unbreakableRoots[r]);
       }
     }
+
+    for (var r = unbreakableWordRoots.length - 1; r >= 0; --r) {
+      if (unbreakableWordRoots[r].length < unbreakableRootMaxLength) {
+        unbreakableWordRoots.splice(r, 1);
+      }
+    }
+
+    return unbreakableWordRoots;
+  };
+
+  var hasUnbreakableRoots = function(wordChunk, unbreakableWordRoots) {
+    for (var i = 0; i < unbreakableWordRoots.length; ++i) {
+      if (wordChunk.indexOf(unbreakableWordRoots[i]) !== -1) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  var getAlternateRoot = function(wordRoot) {
+    if (wordRoot.slice(-1) === 'ж') {
+      return wordRoot.slice(0, -1) + 'г';
+    }
+    return null;
+  };
+
+  var wordFormsHandler = function(word) {
+    if (dict.exceptions.indexOf(word) !== -1) {
+      return [];
+    }
+    if (dict.immutableRoots.indexOf(word) !== -1 || dict.unbreakableRoots.indexOf(word) !== -1) { 
+      return [word]; 
+    }
+
+    var wordForms = [word];
+    var wordRoot = word; // корень без аффиксов
+    var suffixedWordRoot = word; // корень с суффиксом (для расширенного сопоставления)
+    var unbreakableWordRoots = getUnbreakableRoots(word); // список содержащихся проблемных корней
 
     // порядок отсечения аффиксов: тип + количество букв, которые должны остаться у корня
     // (отрицательное значение для приставок)
@@ -63,25 +84,24 @@ window.DuplicateWordsApp.WordFormsModule = function(dict) {
           // отсечение суффиксов и окончаний
           wordChunk = wordRoot.slice(0, affixes[i].length * -1); // возвращает корень без аффикса
 
-          if (wordRootMatched.length > 0 && !hasWordRootMatched(wordChunk)) { 
+          if (unbreakableWordRoots.length > 0 && !hasUnbreakableRoots(wordChunk, unbreakableWordRoots)) { 
             continue; // если часть корня пропадает при отсечении аффикса, то ищется другой
           }
           wordForms.push(wordChunk);
           wordRoot = wordChunk;
-          wordRootPrefixed = wordRoot;
-          if (p == 1) { wordRootSuffixed = wordRoot; }
+          if (p == 1) { suffixedWordRoot = wordRoot; }
           break;
         }
         else if (minRootSize < 0 && affixes[i] === wordRoot.slice(0, affixes[i].length)) {
           // отсечение приставок
           wordChunk = wordRoot.slice(affixes[i].length);
-          if (wordRootMatched.length > 0 && !hasWordRootMatched(wordChunk)) { 
+          if (unbreakableWordRoots.length > 0 && !hasUnbreakableRoots(wordChunk, unbreakableWordRoots)) { 
             continue; // если часть корня пропадает при отсечении аффикса, то ищется другой
           }
           wordForms.push(wordChunk);
           wordRoot = wordChunk;
-          wordRootSuffixed = wordRootSuffixed.slice(affixes[i].length);
-          wordForms.push(wordRootSuffixed);
+          suffixedWordRoot = suffixedWordRoot.slice(affixes[i].length);
+          wordForms.push(suffixedWordRoot);
           break;
         }
       }
@@ -92,9 +112,9 @@ window.DuplicateWordsApp.WordFormsModule = function(dict) {
     }
 
     // для корней с чередующимися согласными
-    if (wordRoot.slice(-1) === 'ж') {
-      wordRootAlt = wordRoot.slice(0, -1) + 'г';
-      wordForms.push(wordRootAlt);
+    var alternateWordRoot = getAlternateRoot(wordRoot);
+    if (alternateWordRoot) {
+      wordForms.push(alternateWordRoot);
     }
 
 //console.log(wordForms);

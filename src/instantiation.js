@@ -127,7 +127,7 @@ window.addEventListener('load', function() {
         var nodeList = ui.mock.querySelectorAll('span');
         var node; 
         for(var r = 0; r < duplicatesChains.length; ++r) {
-          if (duplicatesChains[r].length === 0) { continue; }
+          if (duplicatesChains[r] === null) { continue; }
           ++chainHighlightStyle;
           chainClass = 'chain_' + duplicatesChains[r].join('_'); // класс цепочки повторов
           ++stat.chains;
