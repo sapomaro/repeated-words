@@ -253,4 +253,40 @@ window.addEventListener('load', function() {
 
     expect(wordMatrix.getRepetitions(70 /* search distance */)).toEqual(snapshotResult);
   });
+
+  var ui;
+
+  test('ui elements should be set', function() {
+    ui = document.forms.repetitions; // text, distance, clear, up, summary
+    ui.mock = document.querySelector('#mock');
+    ui.indicator = document.querySelector('#indicator');
+    ui.styles = document.querySelector('style');
+
+    expect(ui).toBeTruthy();
+    expect(ui.text).toBeTruthy();
+    expect(ui.submit).toBeTruthy();
+    expect(ui.distance).toBeTruthy();
+    expect(ui.clear).toBeTruthy();
+    expect(ui.up).toBeTruthy();
+    expect(ui.summary).toBeTruthy();
+    expect(ui.mock).toBeTruthy();
+    expect(ui.indicator).toBeTruthy();
+    expect(ui.styles).toBeTruthy();
+  });
+
+  test('ui elements should respond', function() {
+    var event = new CustomEvent('click');
+    var currentValue = ui.text.value;
+    var testValue = 'тест тест';
+
+    ui.text.value = testValue;
+    ui.clear.dispatchEvent(event);
+    expect(ui.text.value).toBe('');
+
+    ui.clear.dispatchEvent(event);
+    expect(ui.text.value).toBe(testValue);
+
+    ui.text.value = currentValue;
+    ui.text.update();
+  });
 });
