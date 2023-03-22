@@ -6,21 +6,21 @@ window.DuplicateWordsApp.WordFormsModule = function(dict) {
     var unbreakableWordRoots = [];
     var unbreakableRootMaxLength = 0;
 
-    for (var r = dict.unbreakableRoots.length - 1; r >= 0; --r) {
-      if (word.length < dict.unbreakableRoots[r].length) { 
+    for (var i = dict.unbreakableRoots.length - 1; i >= 0; --i) {
+      if (word.length < dict.unbreakableRoots[i].length) { 
         continue;
       }
-      if (word.indexOf(dict.unbreakableRoots[r]) !== -1) {
-        if (unbreakableRootMaxLength < dict.unbreakableRoots[r].length) {
-          unbreakableRootMaxLength = dict.unbreakableRoots[r].length;
+      if (word.indexOf(dict.unbreakableRoots[i]) !== -1) {
+        if (unbreakableRootMaxLength < dict.unbreakableRoots[i].length) {
+          unbreakableRootMaxLength = dict.unbreakableRoots[i].length;
         }
-        unbreakableWordRoots.push(dict.unbreakableRoots[r]);
+        unbreakableWordRoots.push(dict.unbreakableRoots[i]);
       }
     }
 
-    for (var r = unbreakableWordRoots.length - 1; r >= 0; --r) {
-      if (unbreakableWordRoots[r].length < unbreakableRootMaxLength) {
-        unbreakableWordRoots.splice(r, 1);
+    for (var j = unbreakableWordRoots.length - 1; j >= 0; --j) {
+      if (unbreakableWordRoots[j].length < unbreakableRootMaxLength) {
+        unbreakableWordRoots.splice(j, 1);
       }
     }
 
